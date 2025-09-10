@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,11 +12,12 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonAvatar, IonList, IonIte
   standalone: true,
   imports: [CommonModule, FormsModule, IonContent, IonItem, IonInput, IonButton] 
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
+  constructor(private router: Router) {}
 
-  constructor() { }
-
-  ngOnInit() { }
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
 
 }
 
