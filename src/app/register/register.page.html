@@ -23,8 +23,12 @@
     <ion-button expand="block" class="register-btn">Criar conta</ion-button>
 
     <!-- Link para Login -->
-    <div class="links">
-      <p>Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+    <div class="conta">
+      <p>Já tem uma conta?
+        <ion-button class="entrar-btn" fill="clear" size="small" (click)="goToLogin()">
+          Entrar
+        </ion-button>
+      </p>
     </div>
   </div>
 </ion-content>
