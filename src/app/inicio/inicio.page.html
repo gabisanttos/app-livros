@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Capitu</ion-title>
+    <ion-buttons slot="end">
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-segment value="recomendacoes">
+    <ion-segment-button value="recomendacoes">
+      <ion-label>Recomendações</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="biblioteca">
+      <ion-label>Minha Biblioteca</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-card>
+    <ion-card-content>
+      <h2>Bem-vinda, Ana! 👋</h2>
+      <p>Baseado no seu histórico, encontramos algumas sugestões perfeitas para você.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <h3>Baseado em suas leituras</h3>
+
+  <ion-list>
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <img src="#" alt="Fahrenheit 451" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2>Fahrenheit 451</h2>
+        <p>Ray Bradbury</p>
+        <p>⭐ 4.8 — Distopia, Ficção Científica</p>
+      </ion-label>
+      <ion-button slot="end" fill="solid" color="dark">Adicionar</ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <img src="#" alt="Nós" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2>Nós</h2>
+        <p>Yevgeny Zamyatin</p>
+        <p>⭐ 4.3 — Distopia, Clássico</p>
+      </ion-label>
+      <ion-button slot="end" fill="solid" color="dark">Adicionar</ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
