@@ -1,8 +1,12 @@
+import { verify } from 'jsonwebtoken';
 import { Request, Response } from "express-serve-static-core";
 import { userRepository } from "../repositories/userRepository";
 import { BadRequestError } from "../helpers/api-errors";
 import bcrypt from 'bcrypt';
-import { use } from "../integrations/books";
+
+type JwtPayload = {
+    id: number;
+}
 
 export class UserController {
     async createUser(req: Request, res: Response) {
@@ -27,5 +31,9 @@ export class UserController {
         const { password: _, ...user } = newUser;
 
         return res.status(201).json(user);
+    }
+
+    async getProfile(req: Request, res: Response) {
+        return res.status(200).json(req.user);
     }
 }

@@ -1,9 +1,18 @@
 // routes.ts
 import { Router } from "express";
 import { UserController } from "./controllers/UserController";  
+import { LoginController } from "./controllers/LoginController";
+import { authMiddleware } from "./middlewares/authMiddleware";
+    
 
 const routes = Router();
 
-routes.post('/api/users', new UserController().createUser);
+routes.post('/v1/api/login', new LoginController().login);
+routes.post('/v1/api/users', new UserController().createUser);
+
+routes.use(authMiddleware);
+
+routes.get('/v1/api/profile', new UserController().getProfile);
+
 
 export default routes;
