@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { userRepository } from "../repositories/userRepository";
-import { UnauthorizedError } from "../helpers/api-errors";
+import { userRepository } from "../../repositories/userRepository";
+import { UnauthorizedError } from "../../helpers/api-errors";
 
 
 type JwtPayload = {

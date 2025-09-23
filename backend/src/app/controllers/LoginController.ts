@@ -1,6 +1,6 @@
 import { Request, Response } from "express-serve-static-core";
-import { userRepository } from "../repositories/userRepository";
-import { BadRequestError } from "../helpers/api-errors";
+import { userRepository } from "../../repositories/userRepository";
+import { BadRequestError } from "../../helpers/api-errors";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -10,7 +10,7 @@ export class LoginController {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            throw new BadRequestError("Email and password are required");
+            throw new BadRequestError("E-mail e senha são obrigatórios");
         }
 
         const user = await userRepository.findOneBy({ email });

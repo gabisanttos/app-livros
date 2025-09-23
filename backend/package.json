@@ -8,7 +8,7 @@
 		"migration:generate": "npx ts-node ./node_modules/typeorm/cli.js migration:generate",
 		"migration:run": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
 		"migration:revert": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
-		"build": "rm -rf ./dist && tsc",
+		"build": "rm -rf ./dist && tsc && cp ./src/docs/swagger.json ./dist/docs/swagger.json",
 		"start": "node ./dist/index.js"
 	},
 	"devDependencies": {
@@ -17,6 +17,7 @@
 		"@types/express": "^4.17.13",
 		"@types/jsonwebtoken": "^8.5.8",
 		"@types/node": "^18.0.1",
+		"@types/swagger-ui-express": "^4.1.8",
 		"nodemon": "^2.0.19",
 		"ts-node": "^10.8.2",
 		"typeorm-ts-node-commonjs": "^0.3.20",
@@ -35,6 +36,8 @@
 		"pg-connection-string": "^2.9.1",
 		"postgres": "^3.4.7",
 		"reflect-metadata": "^0.1.13",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.1",
 		"typeorm": "^0.3.27"
 	}
 }
