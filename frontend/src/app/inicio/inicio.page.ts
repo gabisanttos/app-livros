@@ -20,7 +20,7 @@ import {
     IonCard, IonCardContent,
     IonList, IonItem, IonThumbnail, IonLabel, IonButton,
     IonSegment, IonSegmentButton,
-    IonFooter, IonTabBar, IonTabButton, IonIcon, IonButtons, IonAvatar
+    IonButtons
   ]
 })
 export class InicioPage implements OnInit {
