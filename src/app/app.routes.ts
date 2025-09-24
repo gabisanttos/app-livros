@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule} from '@angular/router';
+import { PreloadAllModules, RouterModule, Router} from '@angular/router';
 
 import { Routes } from '@angular/router';
 
@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
-    pathMatch: 'full'
+    pathMatch: 'full' 
   },
   {
     path: 'login',
@@ -28,5 +28,8 @@ export const routes: Routes = [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
   exports: [RouterModule]
+
+  
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {}  
+
