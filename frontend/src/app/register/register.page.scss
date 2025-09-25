@@ -56,3 +56,13 @@ p {
   color: #8b6b3e;
   text-decoration: none;
 }
+
+.entrar-btn {
+  --background: transparent;
+  --color: #8b6b3e;
+  --border: none;
+  font-weight: bold;
+  margin-left: -7px;
+  text-decoration: underline;
+  margin-top: -5px;
+}

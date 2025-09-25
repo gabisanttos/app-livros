@@ -1,3 +1,9 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Criar Conta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
   <div class="register-container">
     <h1>Criar Conta</h1>
@@ -24,7 +30,10 @@
 
     <!-- Link para Login -->
     <div class="links">
-      <p>Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+      <span class="conta-text">Já tem uma conta?</span>
+      <ion-button class="entrar-btn" fill="clear" size="small" (click)="goToLogin()">
+        Entrar
+      </ion-button>
     </div>
-  </div>
+  </div> <!-- fecha register-container -->
 </ion-content>
