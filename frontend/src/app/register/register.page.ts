@@ -63,7 +63,7 @@ export class RegisterPage {
       password: this.senha
     };
 
-    this.http.post('http://localhost:3000/v1/api/register', usuario)
+    this.http.post('https://app-livros.onrender.com/v1/api/register', usuario)
       .subscribe({
         next: () => {
           alert('Conta criada com sucesso!');

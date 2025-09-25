@@ -52,9 +52,15 @@ export class LoginController {
             throw new BadRequestError("Email ou senha inválidos");
         }
 
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET ?? '',{
-            expiresIn: '1h'
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error("JWT_SECRET não configurado no .env");
+        }
+
+        const token = jwt.sign({ id: user.id }, jwtSecret, {
+            expiresIn: '1h',
         });
+
 
         const { password: _, ...userLogin} = user;
         

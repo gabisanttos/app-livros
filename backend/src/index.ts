@@ -4,6 +4,8 @@ import cors from 'cors';
 import { AppDataSource } from './data-source';
 import routes from './routes';
 import { setupSwagger } from './docs/swaggerConfig';
+import 'dotenv/config';
+
 
 
 AppDataSource.initialize()

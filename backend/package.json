@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"dev": "nodemon --exec ts-node ./src/index.ts",
+		"dev": "nodemon --exec ts-node -r dotenv/config ./src/index.ts",
 		"migration:generate": "npx ts-node ./node_modules/typeorm/cli.js migration:generate",
 		"migration:run": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
 		"migration:revert": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
