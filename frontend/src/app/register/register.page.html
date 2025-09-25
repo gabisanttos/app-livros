@@ -4,23 +4,23 @@
     <p>Preencha seus dados para começar</p>
 
     <ion-item lines="none" class="input-item">
-      <ion-input placeholder="Nome" type="text"></ion-input>
+      <ion-input placeholder="Nome" type="text" [(ngModel)]="nome"></ion-input>
     </ion-item>
 
     <ion-item lines="none" class="input-item">
-      <ion-input placeholder="Email" type="email"></ion-input>
+      <ion-input placeholder="Email" type="email" [(ngModel)]="email"></ion-input>
     </ion-item>
 
     <ion-item lines="none" class="input-item">
-      <ion-input placeholder="Senha" type="password"></ion-input>
+      <ion-input placeholder="Senha" type="password" [(ngModel)]="senha"></ion-input>
     </ion-item>
 
     <ion-item lines="none" class="input-item">
-      <ion-input placeholder="Confirmar Senha" type="password"></ion-input>
+      <ion-input placeholder="Confirmar Senha" type="password" [(ngModel)]="confirmarSenha"></ion-input>
     </ion-item>
 
     <!-- Botão Criar Conta -->
-    <ion-button expand="block" class="register-btn">Criar conta</ion-button>
+    <ion-button expand="block" class="register-btn" (click)="criarConta()">Criar conta</ion-button>
 
     <!-- Link para Login -->
     <div class="links">
@@ -28,4 +28,3 @@
     </div>
   </div>
 </ion-content>
-

@@ -1,6 +1,6 @@
 <ion-content class="ion-padding">
   <div class="login-container">
-   <div class="logo">
+    <div class="logo">
       <img src="assets/icon/logo.png" alt="Logo">
     </div>
 
@@ -9,14 +9,14 @@
 
     <!-- Formulário -->
     <ion-item lines="none" class="input-item">
-      <ion-input placeholder="Email" type="email"></ion-input>
+      <ion-input [(ngModel)]="email" placeholder="Email" type="email"></ion-input>
     </ion-item>
 
     <ion-item lines="none" class="input-item">
-      <ion-input placeholder="Senha" type="password"></ion-input>
+      <ion-input [(ngModel)]="senha" placeholder="Senha" type="password"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" class="login-btn">Entrar</ion-button>
+    <ion-button expand="block" class="login-btn" (click)="login()">Entrar</ion-button>
 
     <!-- Links -->
     <div class="links">
@@ -25,7 +25,7 @@
     </div>
 
     <ion-button class="register-btn" expand="block" fill="outline" type="button" (click)="goToRegister()">
-    Criar conta
+      Criar conta
     </ion-button>
   </div>
 </ion-content>

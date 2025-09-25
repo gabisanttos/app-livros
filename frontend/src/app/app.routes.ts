@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule} from '@angular/router';
-
+import { HttpClientModule } from '@angular/common/http';
 import { Routes } from '@angular/router';
+import { authGuard } from './auth-guard'; 
 
 export const routes: Routes = [
   {
@@ -18,9 +19,10 @@ export const routes: Routes = [
     loadComponent: () => import('./register/register.page').then(m => m.RegisterPage)
   },
   {
-    path: 'inicio',
-    loadComponent: () => import('./inicio/inicio.page').then( m => m.InicioPage)
-  }
+  path: 'inicio',
+  loadComponent: () => import('./inicio/inicio.page').then(m => m.InicioPage),
+  canActivate: [authGuard]
+}
 ];
 
 @NgModule({
@@ -30,3 +32,12 @@ export const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
+
+
+@NgModule({
+  imports: [
+    HttpClientModule,
+    // outros módulos
+  ],
+})
+export class AppModule {}
