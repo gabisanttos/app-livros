@@ -45,6 +45,59 @@
     }
   ],
   "paths": {
+    "/v1/api/register": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Registra um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "João Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "joao@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário registrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/api/login": {
       "post": {
         "tags": ["Autenticação"],
@@ -91,57 +144,19 @@
             }
           },
           "400": {
-            "description": "Credenciais inválidas"
-          }
-        }
-      }
-    },
-    "/v1/api/users": {
-      "post": {
-        "tags": ["Usuários"],
-        "summary": "Cria um novo usuário",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["name", "email", "password"],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "João Silva"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "joao@email.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "123456"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Usuário criado com sucesso",
+            "description": "Email ou senha inválidos / campos ausentes",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/BadRequestError"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Email já cadastrado"
           }
         }
       }
     },
+    
     "/v1/api/profile": {
       "get": {
         "tags": ["Usuários"],
@@ -172,7 +187,7 @@
   "tags": [
     {
       "name": "Autenticação",
-      "description": "Endpoints relacionados ao login"
+      "description": "Endpoints relacionados ao login e registro"
     },
     {
       "name": "Usuários",
