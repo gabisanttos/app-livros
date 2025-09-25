@@ -4,8 +4,7 @@ import path from 'path';
 import { Express } from 'express';
 
 export const setupSwagger = (app: Express) => {
-  // Usa __dirname para apontar para dist/docs/swagger.json
-  const swaggerFile = path.join(__dirname, 'docs', 'swagger.json');
+  const swaggerFile = path.join(__dirname, 'swagger.json');
   const swaggerData = JSON.parse(fs.readFileSync(swaggerFile, 'utf8'));
 
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerData));
