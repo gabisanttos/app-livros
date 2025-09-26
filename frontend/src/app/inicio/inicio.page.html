@@ -1,21 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Capitu</ion-title>
-    <ion-buttons slot="end">
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-
-  <ion-segment value="recomendacoes">
-    <ion-segment-button value="recomendacoes">
-      <ion-label>Recomendações</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="biblioteca">
-      <ion-label>Minha Biblioteca</ion-label>
-    </ion-segment-button>
-  </ion-segment>
 
   <ion-card>
     <ion-card-content>
@@ -26,29 +15,33 @@
 
   <h3>Baseado em suas leituras</h3>
 
-  <ion-list>
-    <ion-item>
-      <ion-thumbnail slot="start">
-        <img src="#" alt="Fahrenheit 451" />
+  <ion-list class="book-list">
+    <ion-item class="book-item">
+      <ion-thumbnail slot="start" class="book-thumb">
+        <img src="assets/img/fahrenheit.jpg" alt="Fahrenheit 451" />
       </ion-thumbnail>
-      <ion-label>
-        <h2>Fahrenheit 451</h2>
-        <p>Ray Bradbury</p>
-        <p>⭐ 4.8 — Distopia, Ficção Científica</p>
+      <ion-label class="book-label">
+        <h2 class="book-title">Fahrenheit 451</h2>
+        <p class="book-author">Ray Bradbury</p>
+        <p class="book-info">⭐ 4.8 — Distopia, Ficção Científica</p>
       </ion-label>
-      <ion-button slot="end" fill="solid" color="dark">Adicionar</ion-button>
+      <ion-button slot="end" fill="solid" color="dark" size="small" class="book-btn">
+        Adicionar
+      </ion-button>
     </ion-item>
 
-    <ion-item>
-      <ion-thumbnail slot="start">
-        <img src="#" alt="Nós" />
+    <ion-item class="book-item">
+      <ion-thumbnail slot="start" class="book-thumb">
+        <img src="assets/img/nos.jpg" alt="Nós" />
       </ion-thumbnail>
-      <ion-label>
-        <h2>Nós</h2>
-        <p>Yevgeny Zamyatin</p>
-        <p>⭐ 4.3 — Distopia, Clássico</p>
+      <ion-label class="book-label">
+        <h2 class="book-title">Nós</h2>
+        <p class="book-author">Yevgeny Zamyatin</p>
+        <p class="book-info">⭐ 4.3 — Distopia, Clássico</p>
       </ion-label>
-      <ion-button slot="end" fill="solid" color="dark">Adicionar</ion-button>
+      <ion-button slot="end" fill="solid" color="dark" size="small" class="book-btn">
+        Adicionar
+      </ion-button>
     </ion-item>
   </ion-list>
 
