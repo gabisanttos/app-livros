@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import {
   IonHeader,
@@ -49,8 +50,8 @@ import {
     IonTabButton
   ]
 })
+
 export class InicioPage {
-  // exemplo de lista de livros (você pode popular via API)
   recommendations = [
     {
       title: 'Fahrenheit 451',
@@ -66,16 +67,37 @@ export class InicioPage {
     }
   ];
 
-  constructor(private router: Router) {}
+  name: string = '';
 
-  // navegação por clique (caso opte por (click)="goTo('/rota')" nos tab-buttons)
+  constructor(private router: Router, private http: HttpClient) {
+
+    const token = localStorage.getItem('token'); // ou de onde estiver salvo
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+      this.http.get<any>('https://app-livros.onrender.com/v1/api/profile', { headers })
+      .subscribe({
+        next: (res) => {
+          const name = res?.name || 'usuário(a)';
+          const primeiroNome = name.split(' ')[0]; // pega só o primeiro nome
+
+          // capitaliza a primeira letra
+          this.name = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+
+        },
+        error: (err) => {
+          console.error('Erro ao buscar perfil:', err);
+        }
+      });
+  }
+
   goTo(path: string) {
     this.router.navigate([path]);
   }
 
-  // exemplo de handler do botão "Adicionar"
   addBook(book: any) {
     console.log('Adicionar livro:', book.title);
-    // aqui você chamaria o endpoint para adicionar ao usuário
   }
 }

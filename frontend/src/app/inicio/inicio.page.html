@@ -8,7 +8,9 @@
 
   <ion-card>
     <ion-card-content>
-      <h2>Bem-vinda, Ana! 👋</h2>
+      <h2 *ngIf="name">Bem-vindo(a), {{ name }}! 👋</h2>
+      <h2 *ngIf="!name">Bem-vindo(a)! 👋</h2>
+
       <p>Baseado no seu histórico, encontramos algumas sugestões perfeitas para você.</p>
     </ion-card-content>
   </ion-card>
