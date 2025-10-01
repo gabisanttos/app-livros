@@ -1,7 +1,7 @@
 import { Request, Response } from "express-serve-static-core";
-import { userRepository } from "../../repositories/userRepository";
-import { BadRequestError } from "../../helpers/api-errors";
-import { sendResetEmail } from "../../services/sendEmail";
+import { userRepository } from "../database/repositories/userRepository";
+import { BadRequestError } from "../helpers/api-errors";
+import { sendResetEmail } from "../shared/services/sendEmail";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';

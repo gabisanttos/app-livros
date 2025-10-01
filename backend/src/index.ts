@@ -1,12 +1,10 @@
+import 'dotenv/config';
 import 'express-async-errors';
 import express from 'express';
+import routes from './server/routes';
 import cors from 'cors';
-import { AppDataSource } from './data-source';
-import routes from './routes';
-import { setupSwagger } from './docs/swaggerConfig';
-import 'dotenv/config';
-
-
+import { AppDataSource } from './server/database/data-source';
+import { setupSwagger } from './server/docs/swaggerConfig';
 
 AppDataSource.initialize()
   .then(() => {
@@ -26,7 +24,7 @@ AppDataSource.initialize()
     app.use(routes);
 
     return app.listen(process.env.PORT, () => {
-      console.log(`🚀 Servidor rodando na porta ${process.env.PORT}`);
+      console.log(`🚀 Servidor rodando em http://localhost:${process.env.PORT}`);
       console.log(`📚 Documentação disponível em http://localhost:${process.env.PORT}/docs`);
     });
   })

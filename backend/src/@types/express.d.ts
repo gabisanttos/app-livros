@@ -1,4 +1,4 @@
-import { User } from "../app/models/User";
+import { User } from "../server/database/models/User";
 
 
 declare global {

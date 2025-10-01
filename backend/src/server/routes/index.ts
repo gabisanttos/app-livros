@@ -1,8 +1,8 @@
 // routes.ts
 import { Router } from "express";
-import { UserController } from "./app/controllers/UserController";  
-import { AuthController } from "./app/controllers/AuthController";
-import { authMiddleware } from "./app/middlewares/authMiddleware";
+import { UserController } from "../controllers/UserController";  
+import { AuthController } from "../controllers/AuthController";
+import { authMiddleware } from "../shared/middlewares/authMiddleware";
     
 
 const routes = Router();
