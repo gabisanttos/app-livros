@@ -1,15 +1,16 @@
 // routes.ts
 import { Router } from "express";
 import { UserController } from "./app/controllers/UserController";  
-import { LoginController } from "./app/controllers/AuthController";
+import { AuthController } from "./app/controllers/AuthController";
 import { authMiddleware } from "./app/middlewares/authMiddleware";
     
 
 const routes = Router();
 
-routes.post('/v1/api/register', new LoginController().register);
-
-routes.post('/v1/api/login', new LoginController().login);
+routes.post('/v1/api/register', new AuthController().register);
+routes.post('/v1/api/login', new AuthController().login);
+routes.post('/v1/api/forgot-password', new AuthController().requestPasswordReset);
+routes.post('/v1/api/reset-password', new AuthController().resetPassword);
 
 
 routes.use(authMiddleware);

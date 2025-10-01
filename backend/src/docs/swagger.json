@@ -9,7 +9,12 @@
     {
       "url": "http://localhost:3000",
       "description": "Servidor de Desenvolvimento"
+    },
+    {
+      "url": "https://app-livros.onrender.com",
+      "description": "Servidor de Produção"
     }
+
   ],
   "components": {
     "securitySchemes": {
@@ -156,7 +161,118 @@
         }
       }
     },
-    
+    "/v1/api/forgot-password": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Solicita o envio do código OTP para reset de senha",
+        "description": "Envia um código de 6 dígitos (OTP) por e-mail, se o usuário existir.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "usuario@email.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resposta genérica de sucesso (mantida por segurança)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Se o e-mail existir, você receberá instruções para resetar a senha."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "E-mail não fornecido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno ao processar o reset (falha no BD ou envio de e-mail)"
+          }
+        }
+      }
+    },
+    "/v1/api/reset-password": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Define a nova senha usando o código OTP",
+        "description": "Valida o código OTP e o tempo de expiração para redefinir a senha do usuário.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["token", "newPassword"],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "123456",
+                    "description": "O código de 6 dígitos recebido por e-mail."
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "NovaSenhaSegura123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha resetada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Senha resetada com sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token inválido/expirado ou campos ausentes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/api/profile": {
       "get": {
         "tags": ["Usuários"],
@@ -187,7 +303,7 @@
   "tags": [
     {
       "name": "Autenticação",
-      "description": "Endpoints relacionados ao login e registro"
+      "description": "Endpoints relacionados ao registro, login e recuperação de senha"
     },
     {
       "name": "Usuários",
