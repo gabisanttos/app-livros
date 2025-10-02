@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Inserir código</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="box">
+    <p>Insira o código que você recebeu por e-mail.</p>
+
+    <ion-item lines="none">
+      <ion-input placeholder="Código (6 dígitos)" [(ngModel)]="code"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input placeholder="Email" [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="verifyCode()" [disabled]="loading">
+      {{ loading ? 'Verificando...' : 'Verificar código' }}
+    </ion-button>
+
+    <div class="hint">
+      <p>Não recebeu? <a (click)="resend()">Reenviar código</a></p>
+    </div>
+  </div>
+</ion-content>

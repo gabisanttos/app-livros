@@ -22,7 +22,34 @@ export const routes: Routes = [
   path: 'inicio',
   loadComponent: () => import('./inicio/inicio.page').then(m => m.InicioPage),
   canActivate: [authGuard]
-}
+},
+  {
+    path: 'forgot-email',
+    loadComponent: () => import('./forgot-email/forgot-email.page').then( m => m.ForgotEmailPage)
+  },
+  {
+    path: 'forgot-code',
+    loadComponent: () => import('./forgot-code/forgot-code.page').then( m => m.ForgotCodePage)
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./reset-password/reset-password.page').then( m => m.ResetPasswordPage)
+  },
+
+  {
+  path: 'forgot-email',
+  loadComponent: () => import('./forgot-email/forgot-email.page').then(m => m.ForgotEmailPage)
+},
+{
+  path: 'forgot-code',
+  loadComponent: () => import('./forgot-code/forgot-code.page').then(m => m.ForgotCodePage)
+},
+{
+  path: 'reset-password',
+  loadComponent: () => import('./reset-password/reset-password.page').then(m => m.ResetPasswordPage)
+},
+
+
 ];
 
 @NgModule({

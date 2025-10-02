@@ -67,3 +67,18 @@ p {
 .register-btn:hover {
   background: #f0e6d2;
 }
+
+.forgot-link {
+  text-align: right;
+  margin-top: 8px;
+}
+
+.forgot-link a {
+  color: #8b6b3e; // mude para a cor do seu tema
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.forgot-link a:hover {
+  text-decoration: underline;
+}

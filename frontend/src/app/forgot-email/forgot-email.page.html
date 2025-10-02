@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Esqueci minha senha</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="box">
+    <p>Informe o e-mail da conta. Enviaremos um código para redefinir sua senha.</p>
+
+    <ion-item lines="none">
+      <ion-input type="email" placeholder="Seu email" [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="sendCode()" [disabled]="loading">
+      {{ loading ? 'Enviando...' : 'Enviar código' }}
+    </ion-button>
+
+    <div class="hint">
+      <p>Já recebeu o código? <a (click)="goToCode()">Inserir código</a></p>
+    </div>
+  </div>
+</ion-content>
