@@ -100,4 +100,8 @@ export class InicioPage {
   addBook(book: any) {
     console.log('Adicionar livro:', book.title);
   }
+
+  goToAddBook() {
+    this.router.navigate(['/add-book']);
+  }
 }

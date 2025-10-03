@@ -1,0 +1,104 @@
+.form {
+  max-width: 720px;
+  margin: 16px auto;
+}
+
+.or {
+  text-align: center;
+  margin: 10px 0;
+  color: #999;
+}
+
+.upload-row {
+  margin: 10px 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.preview img {
+  width: 100px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+.add-book-content {
+  background-color: #fdf6e3;
+  padding: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+.input-item {
+  --background: #fffdfb;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+
+  ion-icon {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #8b5e3c;
+  }
+
+  ion-label {
+    font-size: 17px;
+    font-weight: 600;
+    color: #3e2f2f;
+    margin-bottom: 4px;
+  }
+
+  ion-input,
+  ion-textarea,
+  ion-datetime {
+    color: #3e2f2f;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.submit-btn {
+  --background: #8b5e3c;
+  --color: #fff;
+  border-radius: 12px;
+  margin-top: 25px;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 12px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.submit-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.95;
+}
+
+ion-toolbar {
+  --background: #cc9a75;
+  --color: #3e2f2f;
+  font-size: 19px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-book-content {
+  --background: #ffffff; 
+  padding: 16px;
+}
+
+.add-book-intro {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #5b4033; 
+  text-align: center;
+}
+

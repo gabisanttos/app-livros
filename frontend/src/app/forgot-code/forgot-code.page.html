@@ -16,7 +16,7 @@
       <ion-input placeholder="Email" [(ngModel)]="email"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" (click)="verifyCode()" [disabled]="loading">
+    <ion-button expand="block" class="code-btn" (click)="verifyCode()" [disabled]="loading">
       {{ loading ? 'Verificando...' : 'Verificar código' }}
     </ion-button>
 

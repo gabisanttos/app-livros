@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="light" class="toolbar-bege">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Adicionar Livro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding add-book-content">
+  <form (ngSubmit)="submit()" #form="ngForm" class="form">
+
+
+     <div class="add-book-intro">
+      Adicione o livro que você já leu para sua biblioteca
+    </div>
+
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Título</ion-label>
+      <ion-input required name="title" [(ngModel)]="title" placeholder="Ex: Fahrenheit 451"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Autor</ion-label>
+      <ion-input required name="author" [(ngModel)]="author" placeholder="Ex: Ray Bradbury"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Gênero (opcional)</ion-label>
+      <ion-input name="genre" [(ngModel)]="genre" placeholder="Ex: Distopia, Ficção Científica"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Avaliação (1-5)</ion-label>
+      <ion-input type="number" min="1" max="5" name="rating" [(ngModel)]="rating" placeholder="4"></ion-input>
+    </ion-item>
+
+
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Observações (opcional)</ion-label>
+      <ion-textarea rows="4" name="notes" [(ngModel)]="notes" placeholder="O que achou do livro?"></ion-textarea>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="isSubmitting" class="submit-btn">
+      {{ isSubmitting ? 'Salvando...' : 'Adicionar livro' }}
+    </ion-button>
+  </form>
+</ion-content>

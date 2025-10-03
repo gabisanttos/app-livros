@@ -36,7 +36,6 @@ ion-toolbar {
 
 /* ---------- TAB BAR e ICONS ---------- */
 
-/* container fixo para cada ícone — todas as imagens ficam dentro desse box */
 .custom-tab-bar {
   --background: #f5dbb0;
   position: fixed !important;
@@ -49,7 +48,6 @@ ion-toolbar {
   z-index: 30;
 }
 
-/* botão: coluna com ícone em cima e label embaixo */
 .custom-tab-bar ion-tab-button {
   display: flex;
   flex-direction: column;
@@ -59,7 +57,6 @@ ion-toolbar {
   padding-bottom: 4px;
 }
 
-/* wrapper fixo para o ícone — garante tamanho idêntico */
 .tab-icon-wrap {
   width: 28px;
   height: 28px;
@@ -71,7 +68,6 @@ ion-toolbar {
   justify-content: center;
 }
 
-/* imagem dentro do wrapper: escala mantendo aspecto, sem cortar */
 .tab-icon {
   max-width: 100%;
   max-height: 100%;
@@ -83,24 +79,28 @@ ion-toolbar {
   opacity: 0.9;
 }
 
-/* ajustes finos por ícone — aplique classes no HTML se precisar */
 .tab-icon--home    { transform: scale(1); }   /* padrão */
 .tab-icon--explore{ transform: scale(1.7); } /* ligeiro ajuste */
 .tab-icon--library { transform: scale(1.1); } /* se arte for maior */
 .tab-icon--saved   { transform: scale(0.98); }
 
-/* quando ativo (rota/estado), aumenta levemente */
 .custom-tab-bar ion-tab-button[aria-selected="true"] .tab-icon {
   opacity: 1;
   transform: scale(1.05);
 }
 
-/* responsividade */
 @media (max-width: 360px) {
   .tab-icon-wrap { width: 22px; height: 22px; }
   .custom-tab-bar { height: 52px; }
   ion-content { --padding-bottom: 68px; }
 }
 
-/* fallback: se alguma imagem tiver espaço transparente, use padding no wrapper */
 .tab-icon-wrap--padded { padding: 2px; box-sizing: border-box; }
+
+.add-btn {
+  margin-bottom: 16px;
+  z-index: 10; 
+  position: relative;
+ --background: #8b6b3e; /* cor de fundo */
+  --color: #fff;          /* cor do texto */
+}

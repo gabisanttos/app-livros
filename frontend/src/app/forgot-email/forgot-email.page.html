@@ -12,7 +12,7 @@
       <ion-input type="email" placeholder="Seu email" [(ngModel)]="email"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" (click)="sendCode()" [disabled]="loading">
+    <ion-button class="forgot-btn" expand="block" (click)="sendCode()" [disabled]="loading">
       {{ loading ? 'Enviando...' : 'Enviar código' }}
     </ion-button>
 

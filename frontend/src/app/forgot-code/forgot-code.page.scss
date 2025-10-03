@@ -1,3 +1,12 @@
 .box { max-width: 520px; margin: 24px auto; }
 .hint { margin-top: 12px; color: #666; }
 .hint a { color: #8b6b3e; cursor: pointer; }
+
+:host ::ng-deep .code-btn {
+  --background: #8b6b3e;
+  --background-hover: #a07d4c;
+  --color: #ffffff;
+  --border-radius: 12px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
