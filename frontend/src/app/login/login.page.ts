@@ -4,6 +4,7 @@ import { HttpClient, HttpClientModule} from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonItem, IonInput, IonButton } from '@ionic/angular/standalone';
+import { environment } from 'src/environments/environment.local';
 
 interface LoginResponse {
   token: string;
@@ -20,6 +21,8 @@ interface LoginResponse {
 export class LoginPage {
   email: string = '';
   senha: string = '';
+  private apiUrl = environment.apiUrl;
+
 
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -32,8 +35,9 @@ export class LoginPage {
     };
 
     
+    const endpoint = `${this.apiUrl}/login`;
 
-    this.http.post<LoginResponse>('https://app-livros.onrender.com/v1/api/login', body).subscribe({
+    this.http.post<LoginResponse>(endpoint, body).subscribe({
       next: (res) => {
 
         localStorage.setItem('token', res.token);
