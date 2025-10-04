@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Explorar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding explore-content">
+  <div class="search-wrap">
+    <ion-searchbar
+      placeholder="Pesquisar livros ou autores"
+      [(ngModel)]="query"
+      (ionInput)="onSearch($event)"
+      debounce="300"
+      showCancelButton="focus">
+    </ion-searchbar>
+  </div>
+
+  <div *ngIf="loading" class="helper-txt">Buscando...</div>
+  <div *ngIf="error" class="helper-txt error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && query && books.length === 0" class="helper-txt">
+    Nenhum resultado encontrado.
+  </div>
+
+  <ion-list class="results-list" *ngIf="books && books.length > 0">
+    <ion-item *ngFor="let b of books" class="result-item" lines="none">
+      <ion-thumbnail slot="start" class="thumb">
+        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" alt="{{ b.title }}" />
+      </ion-thumbnail>
+
+      <ion-label class="result-label">
+        <h2 class="title">{{ b.title }}</h2>
+        <p class="authors">{{ b.authors?.length ? (b.authors.join(', ')) : 'Autor desconhecido' }}</p>
+        <p class="meta" *ngIf="b.publishedDate">Publicado: {{ b.publishedDate }}</p>
+      </ion-label>
+
+      <ion-button slot="end" size="small" class="add-btn" (click)="addToLibrary(b)">
+        Adicionar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
