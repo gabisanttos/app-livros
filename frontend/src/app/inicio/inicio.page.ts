@@ -110,4 +110,8 @@ export class InicioPage {
   goToAddBook() {
     this.router.navigate(['/add-book']);
   }
+
+  goToExplore() {
+    this.router.navigate(['/explore']);
+  }
 }
