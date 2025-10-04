@@ -112,30 +112,48 @@ export class AuthController {
 
     }
 
-    // 4. Resetar senha
-    async resetPassword(req: Request, res: Response) {
-        const { token, newPassword } = req.body;
+    // 4. Verificar código de reset
+    async verifyResetToken(req: Request, res: Response) {
+    const { token } = req.body;
 
-        if (!token || !newPassword) {
-        throw new BadRequestError("Código de reset e nova senha são obrigatórios.");
-        }
-
-        const user = await userRepository.findOneBy({ resetToken: token });
-
-        if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {
-            throw new BadRequestError("Código inválido ou expirado");
-        }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
-
-        user.password = hashedPassword;
-        user.resetToken = null;
-        user.resetTokenExpiry = null;
-
-        await userRepository.save(user);
-
-        return res.status(200).json({ message: "Senha resetada com sucesso" });
+    if (!token) {
+        throw new BadRequestError("O código é obrigatório.");
     }
+
+    const user = await userRepository.findOneBy({ resetToken: token });
+
+    if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {
+        throw new BadRequestError("Código inválido ou expirado. Solicite um novo.");
+    }
+
+    return res.status(200).json({ message: "Código válido" });
+}
+
+
+    // 5. Resetar senha
+    async resetPassword(req: Request, res: Response) {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+        throw new BadRequestError("O código e a nova senha são obrigatórios.");
+    }
+    
+    const user = await userRepository.findOneBy({ resetToken: token });
+
+    if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {
+        throw new BadRequestError("Código inválido ou expirado.");
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    user.password = hashedPassword;
+
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
+
+    await userRepository.save(user);
+
+    return res.status(200).json({ message: "Senha redefinida com sucesso" });
+}
 
 
 }

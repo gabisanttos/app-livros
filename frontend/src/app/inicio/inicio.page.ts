@@ -5,6 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment.local';
+
 
 import {
   IonHeader,
@@ -68,6 +70,8 @@ export class InicioPage {
   ];
 
   name: string = '';
+  private apiUrl = environment.apiUrl;
+
 
   constructor(private router: Router, private http: HttpClient) {
 
@@ -77,7 +81,9 @@ export class InicioPage {
       'Authorization': `Bearer ${token}`
     });
 
-      this.http.get<any>('https://app-livros.onrender.com/v1/api/profile', { headers })
+    const endpoint = `${this.apiUrl}/profile`;
+
+    this.http.get<any>(endpoint, { headers })
       .subscribe({
         next: (res) => {
           const name = res?.name || 'usuário(a)';

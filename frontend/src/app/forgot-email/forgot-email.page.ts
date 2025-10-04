@@ -6,6 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput
 } from '@ionic/angular/standalone';
+import { environment } from 'src/environments/environment.local';
 
 @Component({
   selector: 'app-forgot-email',
@@ -17,6 +18,7 @@ import {
 export class ForgotEmailPage {
   email = '';
   loading = false;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -26,7 +28,10 @@ export class ForgotEmailPage {
       return;
     }
     this.loading = true;
-    this.http.post('http://localhost:3000/v1/api/auth/forgot', { email: this.email })
+
+    const endpoint = `${this.apiUrl}/forgot-password`;
+
+    this.http.post(endpoint, { email: this.email })
       .subscribe({
         next: () => {
           this.loading = false;

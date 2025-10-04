@@ -6,6 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput
 } from '@ionic/angular/standalone';
+import { environment } from 'src/environments/environment.local';
 
 @Component({
   selector: 'app-forgot-code',
@@ -18,6 +19,8 @@ export class ForgotCodePage {
   email = '';
   code = '';
   loading = false;
+  private apiUrl = environment.apiUrl;
+
 
   constructor(private http: HttpClient, private router: Router) {
     // se vier do estado, preenche o email
@@ -30,7 +33,10 @@ export class ForgotCodePage {
   verifyCode() {
     if (!this.email || !this.code) { alert('Preencha email e código.'); return; }
     this.loading = true;
-    this.http.post('http://localhost:3000/v1/api/auth/verify-code', { email: this.email, code: this.code })
+
+    const endpoint = `${this.apiUrl}/verify-reset-token`;
+
+    this.http.post(endpoint, { email: this.email, code: this.code })
       .subscribe({
         next: (res: any) => {
           this.loading = false;

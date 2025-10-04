@@ -10,6 +10,7 @@ const routes = Router();
 routes.post('/v1/api/register', new AuthController().register);
 routes.post('/v1/api/login', new AuthController().login);
 routes.post('/v1/api/forgot-password', new AuthController().requestPasswordReset);
+routes.post('/v1/api/verify-reset-token', new AuthController().verifyResetToken);
 routes.post('/v1/api/reset-password', new AuthController().resetPassword);
 
 

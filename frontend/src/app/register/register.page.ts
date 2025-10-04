@@ -14,6 +14,7 @@ import {
   IonButtons,
   IonLabel
 } from '@ionic/angular/standalone';
+import { environment } from 'src/environments/environment.local';
 
 @Component({
   selector: 'app-register',
@@ -32,8 +33,6 @@ import {
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonButtons,
-    IonLabel
   ]
 })
 export class RegisterPage {
@@ -42,6 +41,8 @@ export class RegisterPage {
   email: string = '';
   senha: string = '';
   confirmarSenha: string = '';
+  private apiUrl = environment.apiUrl;
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -63,7 +64,9 @@ export class RegisterPage {
       password: this.senha
     };
 
-    this.http.post('https://app-livros.onrender.com/v1/api/register', usuario)
+    const endpoint = `${this.apiUrl}/register`;
+
+    this.http.post(endpoint, usuario)
       .subscribe({
         next: () => {
           alert('Conta criada com sucesso!');
