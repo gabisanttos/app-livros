@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import path from 'path/win32';
+import path from 'path';
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 
