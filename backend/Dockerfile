@@ -25,9 +25,6 @@ COPY --from=build /app/package*.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 
-# Copia também o arquivo swagger manualmente (caso não esteja incluso no build)
-COPY --from=build /app/src/docs/swagger.json ./dist/docs/swagger.json
-
 # Configura variáveis de ambiente padrão
 ENV NODE_ENV=production
 ENV PORT=3000
