@@ -8,7 +8,7 @@
 		"migration:generate": "npx ts-node ./node_modules/typeorm/cli.js migration:generate",
 		"migration:run": "npx ts-node ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
 		"migration:revert": "npx ts-node ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
-		"build": "rm -rf ./dist && tsc && copyfiles -u 3 src/server/docs/swagger.json dist/docs",
+		"build": "rm -rf ./dist && tsc && copyfiles -u 1 src/server/docs/swagger.json dist/docs",
 		"start": "node ./dist/index.js"
 	},
 	"devDependencies": {
