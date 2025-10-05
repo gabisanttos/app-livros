@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import path from 'path/win32';
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 
@@ -7,8 +8,8 @@ const dbUrl = process.env.DATABASE_URL || '';
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: dbUrl,
-  entities: [`${__dirname}/**/app/models/*.{ts,js}`],
-  migrations: [`${__dirname}/**/migrations/*.{ts,js}`],
+  entities: [path.join(__dirname, 'models', '*.{js,ts}')],
+  migrations: [path.join(__dirname, 'migrations', '*.{js,ts}')],
   ssl: {
     rejectUnauthorized: false
   },

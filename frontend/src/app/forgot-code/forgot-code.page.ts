@@ -21,29 +21,27 @@ export class ForgotCodePage {
   loading = false;
   private apiUrl = environment.apiUrl;
 
-
   constructor(private http: HttpClient, private router: Router) {
-    // se vier do estado, preenche o email
     const nav = this.router.getCurrentNavigation();
-    if (nav && nav.extras && (nav.extras as any).state) {
-      this.email = ((nav.extras as any).state as any).email || '';
+    if (nav?.extras?.state) {
+      this.email = nav.extras.state['email'] || '';
     }
   }
 
   verifyCode() {
-    if (!this.email || !this.code) { alert('Preencha email e código.'); return; }
+    if (!this.code) { 
+      alert('Por favor, insira o código.'); 
+      return; 
+    }
     this.loading = true;
 
     const endpoint = `${this.apiUrl}/verify-reset-token`;
 
-    this.http.post(endpoint, { email: this.email, code: this.code })
+    this.http.post(endpoint, { token: this.code })
       .subscribe({
-        next: (res: any) => {
+        next: () => {
           this.loading = false;
-          // backend envia resetToken (curto) para permitir mudar senha
-          const resetToken = res.resetToken;
-          // navegar para tela de reset com token e email
-          this.router.navigate(['/reset-password'], { state: { email: this.email, resetToken } });
+          this.router.navigate(['/reset-password'], { state: { token: this.code } });
         },
         error: (err) => {
           this.loading = false;
@@ -53,9 +51,15 @@ export class ForgotCodePage {
   }
 
   resend() {
-    if (!this.email) { alert('Informe o e-mail para reenviar.'); return; }
-    this.http.post('http://localhost:3000/v1/api/auth/forgot', { email: this.email }).subscribe({
-      next: () => alert('Código reenviado. Verifique o e-mail.'),
+    if (!this.email) { 
+      alert('Não foi possível encontrar o e-mail para reenviar o código.'); 
+      return; 
+    }
+    
+    const endpoint = `${this.apiUrl}/forgot-password`;
+
+    this.http.post(endpoint, { email: this.email }).subscribe({
+      next: () => alert('Um novo código foi enviado. Verifique seu e-mail.'),
       error: (err) => alert('Erro ao reenviar: ' + (err.error?.message || err.message))
     });
   }
