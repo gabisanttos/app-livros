@@ -102,7 +102,7 @@ export class AuthController {
     try {
             await userRepository.save(user);
 
-            await sendResetEmail(user.email, resetToken);
+            await sendResetEmail(user.email, resetToken, user.name);
             
             return res.status(200).json({ message: "Se o e-mail existir, você receberá instruções para resetar a senha." });
         } catch (error) {

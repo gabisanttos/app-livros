@@ -16,7 +16,7 @@ import {
 })
 export class ResetPasswordPage {
   email = '';
-  resetToken = '';
+  code = '';
   password = '';
   confirmPassword = '';
   loading = false;
@@ -26,18 +26,18 @@ export class ResetPasswordPage {
     if (nav && nav.extras && (nav.extras as any).state) {
       const s = (nav.extras as any).state as any;
       this.email = s.email || '';
-      this.resetToken = s.resetToken || '';
+      this.code = s.resetToken || '';
     }
   }
 
   resetPassword() {
     if (!this.password || this.password.length < 6) { alert('Senha mínima 6 caracteres'); return; }
     if (this.password !== this.confirmPassword) { alert('Senhas não conferem'); return; }
-    if (!this.resetToken) { alert('Token inválido. Volte e verifique o código.'); return; }
+    if (!this.code) { alert('Token inválido. Volte e verifique o código.'); return; }
 
     this.loading = true;
     this.http.post('http://localhost:3000/v1/api/auth/reset', {
-      email: this.email, resetToken: this.resetToken, password: this.password
+      email: this.email, code: this.code, password: this.password
     }).subscribe({
       next: () => {
         this.loading = false;

@@ -1,3 +1,4 @@
+import { User } from './../../database/models/User';
 import { Resend } from 'resend';
 import 'dotenv/config'; 
 
@@ -8,10 +9,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  *
  * @param email O e-mail do destinatário.
  * @param resetToken O código de 6 dígitos gerado para reset de senha (OTP).
+ * @param name O nome do usuário (opcional).
  */
-export async function sendResetEmail(email: string, resetToken: string): Promise<void> {
-    
-    
+export async function sendResetEmail(email: string, resetToken: string, name: string): Promise<void> {
+
     const emailFrom = process.env.RESEND_EMAIL_FROM;
 
     if (!emailFrom) {
@@ -23,13 +24,17 @@ export async function sendResetEmail(email: string, resetToken: string): Promise
     
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-            <h2 style="color: #6a0dad; text-align: center;">Código de Reset de Senha - Aplicativo Capitu</h2>
-            <p>Olá,</p>
+            <h1 style="color: #a07d4c; text-align: start;">
+                Capitu - 
+                <span style="font-size: 0.7em; font-weight: bold;">Descubra seu próximo livro favorito</span>
+            </h1>
+            <h2 style="color: #a07d4c; text-align: center;">Código de Reset de Senha</h2>
+            <p>Olá, ${name}</p>
             <p>Você solicitou um reset de senha para sua conta no Capitu. Utilize o código de 6 dígitos abaixo no seu aplicativo para confirmar a troca de senha.</p>
             
-            <div style="text-align: center; margin: 30px 0; background-color: #f7f3fb; padding: 20px; border-radius: 6px; border: 1px dashed #6a0dad;">
+            <div style="text-align: center; margin: 30px 0; background-color: #f7f3fb; padding: 20px; border-radius: 6px; border: 1px dashed #a07d4c;">
                 <p style="font-size: 14px; color: #555; margin-bottom: 5px;">Seu Código de Confirmação (Válido por 1 hora):</p>
-                <strong style="font-size: 32px; letter-spacing: 10px; color: #6a0dad;">${otpCode}</strong>
+                <strong style="font-size: 32px; letter-spacing: 10px; color: #a07d4c;">${otpCode}</strong>
             </div>
 
             <p>Este código expira em 1 hora. Por favor, não compartilhe este código com ninguém.</p>
@@ -40,7 +45,7 @@ export async function sendResetEmail(email: string, resetToken: string): Promise
 
     try {
         const { data, error } = await resend.emails.send({
-            from: emailFrom,
+            from: 'Capitu <' + emailFrom + '>',
             to: [email], 
             subject: 'Capitu: Seu Código de Reset de Senha',
             html: htmlContent,
