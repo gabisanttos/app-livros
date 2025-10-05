@@ -39,6 +39,7 @@
 		"pg-connection-string": "^2.9.1",
 		"postgres": "^3.4.7",
 		"reflect-metadata": "^0.1.13",
+		"resend": "^6.1.2",
 		"swagger-jsdoc": "^6.2.8",
 		"swagger-ui-express": "^5.0.1",
 		"typeorm": "^0.3.27"
