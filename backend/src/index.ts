@@ -12,7 +12,7 @@ AppDataSource.initialize()
 
     app.use(cors({
       origin: 'http://localhost:8100',
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       credentials: true 
     }));
 
