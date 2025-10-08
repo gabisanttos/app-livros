@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput
+  IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput,ToastController, IonIcon
 } from '@ionic/angular/standalone';
 
 import { environment } from 'src/environments/environment.local';
+import { addIcons } from 'ionicons';
+import { alertCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 
 
 @Component({
@@ -15,7 +17,7 @@ import { environment } from 'src/environments/environment.local';
   templateUrl: './reset-password.page.html',
   styleUrls: ['./reset-password.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput]
+  imports: [CommonModule, FormsModule, HttpClientModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonIcon]
 })
 export class ResetPasswordPage {
   code = '';
@@ -26,8 +28,10 @@ export class ResetPasswordPage {
   private apiUrl = environment.apiUrl;
 
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private toastController: ToastController) {
     const nav = this.router.getCurrentNavigation();
+    addIcons({ alertCircleOutline, checkmarkCircleOutline });
+
     if (nav?.extras?.state) {
       this.code = nav.extras.state['token'] || ''; 
     }
@@ -49,13 +53,30 @@ export class ResetPasswordPage {
     this.http.post(endpoint, payload).subscribe({
       next: () => {
         this.loading = false;
-        alert('Senha alterada com sucesso! Por favor, faça o login.');
+        this.presentToast('Senha alterada com sucesso! Por favor, faça o login.', 'success');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         this.loading = false;
-        alert('Erro ao redefinir senha: ' + (err.error?.message || 'Código inválido ou expirado.'));
+        this.presentToast('Erro ao redefinir senha: ' + (err.error?.message || 'Código inválido ou expirado.'), 'danger');
       }
     });
   }
+   async presentToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000, // O toast desaparecerá após 3 segundos
+      position: 'top', // Posição do toast na tela
+      color: color,    // Cor (danger para erros, success para sucesso)
+      icon: color === 'danger' ? 'alert-circle-outline' : 'checkmark-circle-outline',
+      buttons: [
+        {
+          text: 'Fechar',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
+  }
+
 }

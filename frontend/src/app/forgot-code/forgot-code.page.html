@@ -16,12 +16,18 @@
       <ion-input placeholder="Email" [(ngModel)]="email"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" class="code-btn" (click)="verifyCode()" [disabled]="loading">
-      {{ loading ? 'Verificando...' : 'Verificar código' }}
+    <ion-button expand="block" class="code-btn" (click)="verifyCode()" [disabled]="isLoading">
+      {{ isLoading ? 'Verificando...' : 'Verificar código' }}
     </ion-button>
 
     <div class="hint">
       <p>Não recebeu? <a (click)="resend()">Reenviar código</a></p>
     </div>
+  </div>
+
+
+  <!-- TELA DE CARREGAMENTO (OVERLAY)-->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <ng-lottie [options]="lottieOptions" class="loading-lottie"></ng-lottie>
   </div>
 </ion-content>

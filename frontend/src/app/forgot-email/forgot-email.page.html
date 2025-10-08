@@ -12,12 +12,16 @@
       <ion-input type="email" placeholder="Seu email" [(ngModel)]="email"></ion-input>
     </ion-item>
 
-    <ion-button class="forgot-btn" expand="block" (click)="sendCode()" [disabled]="loading">
-      {{ loading ? 'Enviando...' : 'Enviar código' }}
+    <ion-button class="forgot-btn" expand="block" (click)="sendCode()" [disabled]="isLoading">
+      {{ isLoading ? 'Enviando...' : 'Enviar código' }}
     </ion-button>
 
     <div class="hint">
       <p>Já recebeu o código? <a (click)="goToCode()">Inserir código</a></p>
     </div>
+  </div>
+
+    <div *ngIf="isLoading" class="loading-overlay">
+    <ng-lottie [options]="lottieOptions" class="loading-lottie"></ng-lottie>
   </div>
 </ion-content>

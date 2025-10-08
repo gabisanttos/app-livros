@@ -27,4 +27,9 @@
       Criar conta
     </ion-button>
   </div>
+
+  <!-- TELA DE CARREGAMENTO (OVERLAY)-->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <ng-lottie [options]="lottieOptions" class="loading-lottie"></ng-lottie>
+  </div>
 </ion-content>
