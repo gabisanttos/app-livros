@@ -54,7 +54,7 @@ export class ResetPasswordPage {
       next: () => {
         this.loading = false;
         this.presentToast('Senha alterada com sucesso! Por favor, faça o login.', 'success');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/sucesuccessfully-reset.page']);
       },
       error: (err) => {
         this.loading = false;
