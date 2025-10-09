@@ -48,10 +48,14 @@ export const routes: Routes = [
   path: 'reset-password',
   loadComponent: () => import('./reset-password/reset-password.page').then(m => m.ResetPasswordPage)
 },
-  {
-    path: 'add-book',
-    loadComponent: () => import('./add-book/add-book.page').then( m => m.AddBookPage)
-  },
+{
+  path: 'successfully-reset',
+  loadComponent: () => import('./successfully-reset/successfully-reset.page').then(m => m.SuccessfullyResetPage)
+},
+{
+  path: 'add-book',
+  loadComponent: () => import('./add-book/add-book.page').then( m => m.AddBookPage)
+},
   {
     path: 'explore',
     loadComponent: () => import('./explore/explore.page').then( m => m.ExplorePage)

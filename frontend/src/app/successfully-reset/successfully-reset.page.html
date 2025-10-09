@@ -1,0 +1,12 @@
+<ion-content class="ion-padding ion-text-center">
+  <div class="box">
+
+    <ion-icon name="checkmark-circle-outline" color="success" style="display: block; margin: 0 auto 50px auto; font-size: 80px; width: 100px; height: 100px;"></ion-icon>
+
+    <p class="" style="font-weight: bold;">Senha alterada com sucesso! <br><p style="font-weight: normal">Agora você pode fazer login.</p></p>
+
+    <ion-button expand="block" class="reset-btn" (click)="SuccessfullyResetPage()" [disabled]="loading">
+      {{ loading ? 'Aguarde...' : 'Fazer login' }}
+    </ion-button>
+  </div>
+</ion-content>
