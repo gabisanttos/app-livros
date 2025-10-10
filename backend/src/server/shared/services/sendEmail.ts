@@ -1,43 +1,40 @@
-import { Resend } from 'resend';
-import 'dotenv/config';
+// 1. Importe a biblioteca oficial do SendGrid
+import sgMail from '@sendgrid/mail';
+import 'dotenv/config'; 
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// 2. Configure a chave de API (ela será lida da variável de ambiente)
+// O SendGrid recomenda o nome 'SENDGRID_API_KEY'
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 /**
- * Capitaliza a primeira letra de cada palavra em uma string.
- * @param name 
- * @returns O nome formatado ou uma saudação padrão.
+ * Capitaliza a primeira letra de cada palavra em uma string de nome.
  */
 function capitalizeName(name?: string): string {
-  if (!name) {
-    return 'Olá'; // Retorna uma saudação genérica se o nome não for fornecido.
-  }
-  return name
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    if (!name) return 'Usuário';
+    return name
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
-
 /**
- * Envia um e-mail com o CÓDIGO de 6 dígitos para reset de senha usando a API da Resend.
+ * Envia um e-mail com o CÓDIGO de 6 dígitos para reset de senha usando a API do SendGrid.
  *
  * @param email O e-mail do destinatário.
  * @param resetToken O código de 6 dígitos gerado para reset de senha (OTP).
- * @param name O nome do usuário (opcional).
+ * @param name O nome do usuário.
  */
-export async function sendResetEmail(email: string, resetToken: string, name?: string): Promise<void> {
-
-    const emailFrom = process.env.RESEND_EMAIL_FROM;
+export async function sendResetEmail(email: string, resetToken: string, name: string): Promise<void> {
+    // O remetente DEVE ser um e-mail de um domínio que você verificou no SendGrid
+    const emailFrom = process.env.APP_EMAIL_FROM;
 
     if (!emailFrom) {
-        console.error("FATAL ERROR: RESEND_EMAIL_FROM não configurado no ambiente.");
+        console.error("FATAL ERROR: APP_EMAIL_FROM não configurado no ambiente.");
         throw new Error("Configurações de e-mail incompletas.");
     }
-
-    const otpCode = resetToken;
-    // 👇 Formata o nome do usuário antes de usá-lo no template.
+    
     const formattedName = capitalizeName(name);
+    const otpCode = resetToken;
 
     const htmlContent = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
@@ -60,23 +57,25 @@ export async function sendResetEmail(email: string, resetToken: string, name?: s
         </div>
     `;
 
+    
+    // 3. Monte a mensagem no formato que o SendGrid espera
+    const msg = {
+        to: email,
+        from: emailFrom, // Use o e-mail verificado
+        subject: 'Capitu: Seu Código de Reset de Senha',
+        html: htmlContent,
+    };
+
     try {
-        const { data, error } = await resend.emails.send({
-            from: `Capitu <${emailFrom}>`, // Forma mais robusta de definir o remetente
-            to: [email],
-            subject: 'Capitu: Seu Código de Reset de Senha',
-            html: htmlContent,
-        });
-
-        if (error) {
-            console.error(`[RESEND ERROR] Falha ao enviar e-mail para ${email}:`, error);
-            throw new Error("Falha no envio de e-mail com a Resend.");
+        // 4. Envie o e-mail usando a função do SendGrid
+        await sgMail.send(msg);
+        console.log(`[EMAIL] E-mail enviado com sucesso para ${email} via SendGrid.`);
+    } catch (error: any) {
+        console.error(`[SENDGRID ERROR] Falha ao enviar e-mail para ${email}:`, error);
+        // O SendGrid pode fornecer mais detalhes do erro no corpo da resposta
+        if (error.response) {
+            console.error(error.response.body)
         }
-
-        console.log(`[EMAIL] E-mail enviado com sucesso para ${email}. Message ID: ${data?.id}`);
-    } catch (err) {
-        console.error(`[EMAIL SERVICE ERROR] Exceção ao tentar enviar e-mail para ${email}:`, err);
         throw new Error("Falha no envio de e-mail.");
     }
 }
-
