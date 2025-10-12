@@ -1,13 +1,12 @@
-// 1. Importe a biblioteca oficial do SendGrid
-import sgMail from '@sendgrid/mail';
+// 1. Importe a biblioteca oficial da Resend
+import { Resend } from 'resend';
 import 'dotenv/config'; 
 
 // 2. Configure a chave de API (ela será lida da variável de ambiente)
-// O SendGrid recomenda o nome 'SENDGRID_API_KEY'
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
- * Capitaliza a primeira letra de cada palavra em uma string de nome.
+ * Capitaliza a primeira letra de cada palavra numa string de nome.
  */
 function capitalizeName(name?: string): string {
     if (!name) return 'Usuário';
@@ -17,15 +16,16 @@ function capitalizeName(name?: string): string {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 }
+
 /**
- * Envia um e-mail com o CÓDIGO de 6 dígitos para reset de senha usando a API do SendGrid.
+ * Envia um e-mail com o CÓDIGO de 6 dígitos para reset de senha usando a API da Resend.
  *
  * @param email O e-mail do destinatário.
  * @param resetToken O código de 6 dígitos gerado para reset de senha (OTP).
- * @param name O nome do usuário.
+ * @param name O nome do utilizador.
  */
 export async function sendResetEmail(email: string, resetToken: string, name: string): Promise<void> {
-    // O remetente DEVE ser um e-mail de um domínio que você verificou no SendGrid
+    // O remetente DEVE ser um e-mail de um domínio que você verificou na Resend
     const emailFrom = process.env.APP_EMAIL_FROM;
 
     if (!emailFrom) {
@@ -57,25 +57,24 @@ export async function sendResetEmail(email: string, resetToken: string, name: st
         </div>
     `;
 
-    
-    // 3. Monte a mensagem no formato que o SendGrid espera
-    const msg = {
-        to: email,
-        from: emailFrom, // Use o e-mail verificado
-        subject: 'Capitu: Seu Código de Reset de Senha',
-        html: htmlContent,
-    };
-
     try {
-        // 4. Envie o e-mail usando a função do SendGrid
-        await sgMail.send(msg);
-        console.log(`[EMAIL] E-mail enviado com sucesso para ${email} via SendGrid.`);
-    } catch (error: any) {
-        console.error(`[SENDGRID ERROR] Falha ao enviar e-mail para ${email}:`, error);
-        // O SendGrid pode fornecer mais detalhes do erro no corpo da resposta
-        if (error.response) {
-            console.error(error.response.body)
+        // 3. Envie o e-mail usando a função da Resend
+        const { data, error } = await resend.emails.send({
+            from: emailFrom, // Use o formato "Nome <email@seu-dominio.com>"
+            to: [email], 
+            subject: 'Capitu: Seu Código de Reset de Senha',
+            html: htmlContent,
+        });
+
+        if (error) {
+            console.error(`[RESEND ERROR] Falha ao enviar e-mail para ${email}:`, error);
+            throw new Error("Falha no envio de e-mail com a Resend.");
         }
+
+        console.log(`[EMAIL] E-mail enviado com sucesso para ${email} via Resend. Message ID: ${data?.id}`);
+    } catch (err) {
+        console.error(`[EMAIL SERVICE ERROR] Exceção ao tentar enviar e-mail para ${email}:`, err);
         throw new Error("Falha no envio de e-mail.");
     }
 }
+
