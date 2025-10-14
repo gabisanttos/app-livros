@@ -1,0 +1,28 @@
+# Nome do workflow que aparecerá na aba "Actions" do GitHub
+name: Deploy Backend to Render
+
+# Define o gatilho (trigger) para este workflow
+on:
+  # Aciona a cada 'push'
+  push:
+    # Apenas na branch 'main'
+    branches:
+      - main
+    # E SOMENTE se os ficheiros alterados estiverem dentro da pasta 'backend'
+    paths:
+      - 'backend/**'
+
+# Define os trabalhos (jobs) a serem executados
+jobs:
+  # Nome do nosso trabalho
+  deploy:
+    # Usa a versão mais recente do Ubuntu como ambiente de execução
+    runs-on: ubuntu-latest
+    
+    # Define os passos a serem executados neste trabalho
+    steps:
+      # Nome do passo que aparecerá nos logs
+      - name: Trigger Render Deploy
+        # Executa um comando 'curl' para fazer uma requisição POST para a nossa URL secreta.
+        # Isto é o que diz ao Render para começar um novo deploy.
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
