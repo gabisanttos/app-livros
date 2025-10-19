@@ -1,6 +1,4 @@
-import { User } from "../server/database/models/User";
-
-
+import { User } from "../models/user.model";
 declare global {
     namespace Express {
         export interface Request {

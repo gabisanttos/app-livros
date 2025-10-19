@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import 'express-async-errors';
 import express from 'express';
-import routes from './server/routes';
+import authRoutes from './routes/auth.route';
+import userRoutes from './routes/user.route';
 import cors from 'cors';
-import { AppDataSource } from './server/database/data-source';
-import { setupSwagger } from './server/docs/swaggerConfig';
+import { AppDataSource } from './database/data-source';
+import { setupSwagger } from './config/swagger.config';
 
 AppDataSource.initialize()
   .then(() => {
@@ -16,16 +17,15 @@ AppDataSource.initialize()
       credentials: true 
     }));
 
-
     app.use(express.json());
 
     setupSwagger(app);
-    
-    app.use(routes);
+
+    app.use("/v1/api", authRoutes);
+    app.use("/v1/api", userRoutes);
 
     return app.listen(process.env.PORT, () => {
       console.log(`🚀 Servidor rodando em http://localhost:${process.env.PORT}`);
-      console.log(`📚 Documentação disponível em http://localhost:${process.env.PORT}/docs`);
     });
   })
   .catch((error) => console.log(error));
