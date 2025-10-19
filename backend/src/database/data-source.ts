@@ -8,7 +8,7 @@ const dbUrl = process.env.DATABASE_URL || '';
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: dbUrl,
-  entities: [path.join(__dirname, 'models', '**', '*.model.{js,ts}')],
+  entities: [path.join(__dirname,'..', 'models', '**', '*.model.{js,ts}')],
   migrations: [path.join(__dirname, 'migrations', '*.{js,ts}')],
   ssl: {
     rejectUnauthorized: false
