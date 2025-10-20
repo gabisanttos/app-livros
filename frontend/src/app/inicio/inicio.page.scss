@@ -1,6 +1,6 @@
-/* ---------- GERAL ---------- */
+
 ion-content {
-  --background: #f6f6f7; /* fundo suave e limpo */
+  --background: #f6f6f7;
   color: #333;
   font-family: 'Poppins', sans-serif;
   --padding-bottom: 70px;
@@ -14,7 +14,6 @@ ion-toolbar {
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
-/* ---------- CARTÕES ---------- */
 ion-card {
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
@@ -39,7 +38,6 @@ ion-card p {
   line-height: 1.4;
 }
 
-/* ---------- TÍTULOS ---------- */
 h3 {
   font-weight: 700;
   color: #1e1e1e;
@@ -47,7 +45,6 @@ h3 {
   font-size: 16px;
 }
 
-/* ---------- LISTA DE LIVROS ---------- */
 .book-list {
   padding: 0 4px;
 }
@@ -94,24 +91,21 @@ h3 {
   color: #888;
 }
 
-/* ---------- BOTÃO "ADICIONAR" ---------- */
 .book-btn {
   --background: #8b6b3e;
   --color: #fff;
-  --border-radius: 50%;
+  --border-radius: 20%;
   --padding-start: 0;
   --padding-end: 0;
   width: 64px;
-  height: 64px;
+  height: 40px;
   font-size: 11px;
   text-transform: none;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ---------- TAB BAR ---------- */
 .custom-tab-bar {
   --background: #fff;
   border-top: 1px solid #e6e6e6;
@@ -152,7 +146,6 @@ h3 {
   opacity: 1;
 }
 
-/* ---------- RESPONSIVO ---------- */
 @media (max-width: 360px) {
   ion-toolbar { font-size: 18px; }
   .book-btn { width: 56px; height: 56px; font-size: 10px; }

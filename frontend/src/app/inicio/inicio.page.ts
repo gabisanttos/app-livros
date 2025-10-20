@@ -103,14 +103,6 @@ export class InicioPage {
     this.router.navigate([path]);
   }
 
-  addBook(book: any) {
-    console.log('Adicionar livro:', book.title);
-  }
-
-  goToAddBook() {
-    this.router.navigate(['/add-book']);
-  }
-
   goToExplore() {
     this.router.navigate(['/explore']);
   }
