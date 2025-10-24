@@ -22,7 +22,8 @@ import {
   IonButton,
   IonTabs,
   IonTabBar,
-  IonTabButton
+  IonTabButton,
+  IonIcon
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -49,7 +50,8 @@ import {
     IonButton,
     IonTabs,
     IonTabBar,
-    IonTabButton
+    IonTabButton,
+    IonIcon
   ]
 })
 

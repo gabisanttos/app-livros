@@ -14,8 +14,8 @@ import {
   IonLabel,
   IonButton,
   IonButtons,
-  IonBackButton
-} from '@ionic/angular/standalone';
+  IonBackButton,
+  IonIcon, IonTabs, IonTabBar, IonTabButton } from '@ionic/angular/standalone';
 
 type BookResult = {
   id: string;
@@ -31,7 +31,7 @@ type BookResult = {
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonTabButton, IonTabBar, IonTabs, 
     CommonModule,
     FormsModule,
     HttpClientModule,
@@ -46,7 +46,8 @@ type BookResult = {
     IonLabel,
     IonButton,
     IonButtons,
-    IonBackButton
+    IonBackButton,
+    IonIcon
   ]
 })
 export class ExplorePage {
