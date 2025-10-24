@@ -106,4 +106,7 @@ export class InicioPage {
   goToExplore() {
     this.router.navigate(['/explore']);
   }
+  goToLibrary() {
+    this.router.navigate(['/library']);
+  }
 }

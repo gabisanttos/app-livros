@@ -56,6 +56,11 @@ export const routes: Routes = [
     path: 'explore',
     loadComponent: () => import('./explore/explore.page').then( m => m.ExplorePage)
   },
+{
+  path: 'library',
+  loadComponent: () => import('./library/library.page').then(m => m.LibraryPage)
+},
+
 
 
 ];
