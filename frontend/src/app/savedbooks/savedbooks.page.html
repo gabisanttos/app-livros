@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Livros Salvos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="savedbooks-content ion-padding">
+  <div class="top-actions">
+    <ion-button expand="block" class="back-btn" (click)="goBack()">
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Voltar para Biblioteca
+    </ion-button>
+  </div>
+
+  <h2 class="section-title">Seus Livros Salvos</h2>
+
+  <div *ngIf="savedBooks.length === 0" class="empty">
+    Nenhum livro salvo ainda. 💭
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let book of savedBooks" class="book-item">
+      <ion-thumbnail slot="start" class="thumb">
+      </ion-thumbnail>
+      <ion-label>
+        <h3 class="title">{{ book.title }}</h3>
+        <p class="meta">{{ book.author }}</p>
+        <p class="notes">{{ book.notes }}</p>
+      </ion-label>
+      <ion-button fill="clear" color="danger" (click)="removeBook(book)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
+

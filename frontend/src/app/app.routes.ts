@@ -60,6 +60,10 @@ export const routes: Routes = [
   path: 'library',
   loadComponent: () => import('./library/library.page').then(m => m.LibraryPage)
 },
+  {
+    path: 'savedbooks',
+    loadComponent: () => import('./savedbooks/savedbooks.page').then( m => m.SavedbooksPage)
+  },
 
 
 ];
@@ -76,7 +80,6 @@ export class AppRoutingModule {}
 @NgModule({
   imports: [
     HttpClientModule,
-    // outros módulos
   ],
 })
 export class AppModule {}

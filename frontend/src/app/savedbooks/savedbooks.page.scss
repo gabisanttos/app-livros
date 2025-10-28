@@ -1,0 +1,59 @@
+.savedbooks-content {
+  --background: #f5efe6;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  padding-bottom: 90px;
+}
+
+.back-btn {
+  --background: #8b6b3e;
+  --color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.section-title {
+  margin: 12px 0 6px 4px;
+  color: #5c4434;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.book-item {
+  --min-height: 80px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #fffdf6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  align-items: center;
+}
+
+.thumb img {
+  width: 52px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.title {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.meta {
+  font-size: 13px;
+  color: #7a6756;
+  margin-top: 4px;
+}
+
+.notes {
+  font-size: 13px;
+  color: #6a5848;
+  margin-top: 6px;
+}
+
+.empty {
+  text-align: center;
+  color: #8a7a6b;
+  margin-top: 20px;
+}
