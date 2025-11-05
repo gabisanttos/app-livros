@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ToastController } from '@ionic/angular';
+import { environment } from 'src/environments/environment.local';
+
 import {
   IonHeader,
   IonToolbar,
@@ -11,7 +15,6 @@ import {
   IonLabel,
   IonInput,
   IonList,
-  IonThumbnail,
   IonTextarea,
   IonSegment,
   IonSegmentButton,
@@ -19,15 +22,15 @@ import {
   IonButtons
 } from '@ionic/angular/standalone';
 
-type LibraryBook = {
-  id: string;
+interface LibraryBook {
+  id?: number;
   title: string;
   author?: string;
-  thumbnail?: string | null;
   notes?: string;
-  status: 'reading' | 'read';
-  createdAt: number;
-};
+  readingStatus: 'READING' | 'READ';
+  isFavorite?: boolean;
+  userId?: number;
+}
 
 @Component({
   selector: 'app-library',
@@ -46,7 +49,6 @@ type LibraryBook = {
     IonLabel,
     IonInput,
     IonList,
-    IonThumbnail,
     IonTextarea,
     IonSegment,
     IonSegmentButton,
@@ -54,117 +56,108 @@ type LibraryBook = {
     IonButtons
   ]
 })
-export class LibraryPage {
+export class LibraryPage implements OnInit {
+  books: LibraryBook[] = [];
   reading: LibraryBook[] = [];
   read: LibraryBook[] = [];
 
   showAdd = false;
   isSubmitting = false;
 
-  form = {
+  userId = 1;
+
+  form: LibraryBook = {
     title: '',
     author: '',
     notes: '',
-    status: 'reading' as 'reading' | 'read',
-    thumbnail: ''
+    readingStatus: 'READING',
   };
 
-  private STORAGE_KEY = 'capitu_library_v1';
+  private apiUrl = environment.apiUrl;
 
-  constructor() {
-    this.loadFromStorage();
+  constructor(private http: HttpClient, private toastCtrl: ToastController) {}
+
+  ngOnInit() {
+    this.loadBooks();
+  }
+
+  async presentToast(message: string, color: string = 'success') {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+    });
+    toast.present();
   }
 
   toggleAdd() {
     this.showAdd = !this.showAdd;
   }
 
-  private generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  loadBooks() {
+    this.http.get<LibraryBook[]>(`${this.apiUrl}/books/user/${this.userId}`).subscribe({
+      next: (res) => {
+        this.books = res;
+        this.filterBooks();
+      },
+      error: () => this.presentToast('Erro ao carregar livros', 'danger'),
+    });
+  }
+
+  filterBooks() {
+    this.reading = this.books.filter((b) => b.readingStatus === 'READING');
+    this.read = this.books.filter((b) => b.readingStatus === 'READ');
   }
 
   addBook() {
-    if (!this.form.title || this.form.title.trim().length === 0) {
-      alert('Preencha o título do livro.');
-      return;
-    }
+    if (!this.form.title) return;
 
     this.isSubmitting = true;
+    const payload = { ...this.form, userId: this.userId };
 
-    const book: LibraryBook = {
-      id: this.generateId(),
-      title: this.form.title.trim(),
-      author: this.form.author?.trim() || '',
-      thumbnail: this.form.thumbnail || null,
-      notes: this.form.notes?.trim() || '',
-      status: this.form.status,
-      createdAt: Date.now()
-    };
-
-    if (book.status === 'reading') {
-      this.reading.unshift(book);
-    } else {
-      this.read.unshift(book);
-    }
-
-    this.saveToStorage();
-
-    // limpa o formulário
-    this.form.title = '';
-    this.form.author = '';
-    this.form.notes = '';
-    this.form.status = 'reading';
-    this.form.thumbnail = '';
-
-    this.isSubmitting = false;
-    this.showAdd = false;
+    this.http.post<LibraryBook>(this.apiUrl, payload).subscribe({
+      next: (res) => {
+        this.books.push(res);
+        this.filterBooks();
+        this.presentToast('Livro adicionado!');
+        this.form = { title: '', author: '', notes: '', readingStatus: 'READING' };
+        this.showAdd = false;
+      },
+      error: () => this.presentToast('Erro ao adicionar livro', 'danger'),
+      complete: () => (this.isSubmitting = false),
+    });
   }
 
-  markAsRead(book: LibraryBook) {
-    this._moveBook(book, 'read');
-  }
+  updateStatus(book: LibraryBook, newStatus: 'READING' | 'READ') {
+    const updated = { ...book, readingStatus: newStatus };
 
-  markAsReading(book: LibraryBook) {
-    this._moveBook(book, 'reading');
+    this.http.put(`${this.apiUrl}/${book.id}`, updated).subscribe({
+      next: () => {
+        book.readingStatus = newStatus;
+        this.filterBooks();
+        this.presentToast('Status atualizado!');
+      },
+      error: () => this.presentToast('Erro ao atualizar status', 'danger'),
+    });
   }
 
   removeBook(book: LibraryBook) {
-    this.reading = this.reading.filter(b => b.id !== book.id);
-    this.read = this.read.filter(b => b.id !== book.id);
-    this.saveToStorage();
+    this.http.delete(`${this.apiUrl}/${book.id}`).subscribe({
+      next: () => {
+        this.books = this.books.filter((b) => b.id !== book.id);
+        this.filterBooks();
+        this.presentToast('Livro removido');
+      },
+      error: () => this.presentToast('Erro ao remover livro', 'danger'),
+    });
   }
 
-  private _moveBook(book: LibraryBook, to: 'reading' | 'read') {
-    this.reading = this.reading.filter(b => b.id !== book.id);
-    this.read = this.read.filter(b => b.id !== book.id);
-
-    const moved = { ...book, status: to, createdAt: Date.now() };
-    if (to === 'reading') this.reading.unshift(moved);
-    else this.read.unshift(moved);
-
-    this.saveToStorage();
+  // Atalhos
+  markAsRead(book: LibraryBook) {
+    this.updateStatus(book, 'READ');
   }
 
-  private saveToStorage() {
-    try {
-      localStorage.setItem(
-        this.STORAGE_KEY,
-        JSON.stringify({ reading: this.reading, read: this.read })
-      );
-    } catch (err) {
-      console.error('Erro ao salvar biblioteca no localStorage', err);
-    }
-  }
-
-  private loadFromStorage() {
-    try {
-      const raw = localStorage.getItem(this.STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      this.reading = parsed.reading || [];
-      this.read = parsed.read || [];
-    } catch (err) {
-      console.error('Erro ao carregar biblioteca do localStorage', err);
-    }
+  markAsReading(book: LibraryBook) {
+    this.updateStatus(book, 'READING');
   }
 }

@@ -28,7 +28,7 @@
   <ion-list class="results-list" *ngIf="books && books.length > 0">
     <ion-item *ngFor="let b of books" class="result-item" lines="none">
       <ion-thumbnail slot="start" class="thumb">
-        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" alt="{{ b.title }}" />
+        <img [src]="b.thumbnail" alt="{{ b.title }}" />
       </ion-thumbnail>
 
       <ion-label class="result-label">

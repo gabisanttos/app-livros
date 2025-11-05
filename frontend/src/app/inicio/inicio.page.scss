@@ -127,6 +127,13 @@ h3 {
   justify-content: center;
 }
 
+.inicio-btn {
+  --background: #8b6b3e;
+  --border-radius: 8px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 10px;
+}
 
 @media (max-width: 360px) {
   ion-toolbar { font-size: 18px; }

@@ -15,37 +15,36 @@
     </ion-card-content>
   </ion-card>
 
-  <h3>Baseado em suas leituras</h3>
+<h3>Baseado em suas leituras</h3>
 
-  <ion-list class="book-list">
-    <ion-item class="book-item">
-      <ion-thumbnail slot="start" class="book-thumb">
-        <img src="assets/img/fahrenheit.jpg" alt="Fahrenheit 451" />
-      </ion-thumbnail>
-      <ion-label class="book-label">
-        <h2 class="book-title">Fahrenheit 451</h2>
-        <p class="book-author">Ray Bradbury</p>
-        <p class="book-info">⭐ 4.8 — Distopia, Ficção Científica</p>
-      </ion-label>
-      <ion-button slot="end" fill="solid" size="small" class="book-btn">
-        Adicionar
-      </ion-button>
-    </ion-item>
+<!-- Se houver recomendações -->
+<ion-list *ngIf="recommendations.length > 0" class="book-list">
+  <ion-item *ngFor="let book of recommendations" class="book-item">
+    <ion-thumbnail slot="start" class="book-thumb">
+      <img [src]="book.thumbnail" [alt]="book.title" />
+    </ion-thumbnail>
+    <ion-label class="book-label">
+      <h2 class="book-title">{{ book.title }}</h2>
+      <p class="book-author">{{ book.author }}</p>
+      <p class="book-info">{{ book.info }}</p>
+    </ion-label>
+    <ion-button slot="end" fill="solid" size="small" class="book-btn">
+      Adicionar
+    </ion-button>
+  </ion-item>
+</ion-list>
 
-    <ion-item class="book-item">
-      <ion-thumbnail slot="start" class="book-thumb">
-        <img src="assets/img/nos.jpg" alt="Nós" />
-      </ion-thumbnail>
-      <ion-label class="book-label">
-        <h2 class="book-title">Nós</h2>
-        <p class="book-author">Yevgeny Zamyatin</p>
-        <p class="book-info">⭐ 4.3 — Distopia, Clássico</p>
-      </ion-label>
-      <ion-button slot="end" fill="solid" size="small" class="book-btn">
-        Adicionar 
-      </ion-button>
-    </ion-item>
-  </ion-list>
+<!-- Se não houver recomendações -->
+<ion-card *ngIf="recommendations.length === 0">
+  <ion-card-content class="ion-text-center">
+    <p>Parece que você ainda não adicionou livros na biblioteca.</p>
+    <p>Adicione livros para receber recomendações personalizadas!</p>
+    <ion-button fill="solid" class="inicio-btn" (click)="goToLibrary()">
+      Adicionar livros na biblioteca
+    </ion-button>
+  </ion-card-content>
+</ion-card>
+
 
   <ion-tabs>
   <ion-tab-bar slot="bottom" class="custom-tab-bar">

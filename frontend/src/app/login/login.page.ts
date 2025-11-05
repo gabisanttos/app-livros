@@ -27,8 +27,7 @@ interface LoginResponse {
     IonItem,
     IonInput,
     IonButton,
-    LottieComponent, 
-    IonIcon
+    LottieComponent,     
   ]
 })
 
@@ -62,7 +61,7 @@ export class LoginPage {
     this.isLoading = true;
     
     const body = { email: this.email, password: this.senha };
-    const endpoint = `${this.apiUrl}/login`;
+    const endpoint = `${this.apiUrl}/auth/login`;
 
     this.http.post<LoginResponse>(endpoint, body)
     .pipe(
