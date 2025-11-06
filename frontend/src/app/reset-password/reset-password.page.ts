@@ -42,7 +42,7 @@ export class ResetPasswordPage {
     if (this.password !== this.confirmPassword) { alert('Senhas não conferem'); return; }
     if (!this.code) { alert('Token inválido. Volte e verifique o código.'); return; }
 
-    const endpoint = `${this.apiUrl}/reset-password`;
+    const endpoint = `${this.apiUrl}/auth/reset-password`;
 
     this.loading = true;
     const payload = {

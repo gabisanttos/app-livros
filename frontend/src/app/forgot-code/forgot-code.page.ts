@@ -50,7 +50,7 @@ export class ForgotCodePage {
     this.presentToast('Código  validado com sucesso.', 'success');
 
 
-    const endpoint = `${this.apiUrl}/verify-reset-token`;
+    const endpoint = `${this.apiUrl}/auth/verify-reset-token`;
 
     this.http.post(endpoint, { token: this.code })
     .pipe(

@@ -47,7 +47,7 @@ export class ForgotEmailPage {
 
     this.isLoading = true;
 
-    const endpoint = `${this.apiUrl}/forgot-password`;
+    const endpoint = `${this.apiUrl}/auth/forgot-password`;
 
     this.http.post(endpoint, { email: this.email })
       .pipe(
