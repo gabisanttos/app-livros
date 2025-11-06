@@ -19,8 +19,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonBackButton,
-  IonButtons
-} from '@ionic/angular/standalone';
+  IonButtons, IonIcon, IonTabButton } from '@ionic/angular/standalone';
 
 interface LibraryBook {
   id?: number;
@@ -142,7 +141,13 @@ export class LibraryPage implements OnInit {
   }
 
   removeBook(book: LibraryBook) {
-    this.http.delete(`${this.apiUrl}/${book.id}`).subscribe({
+  const userId = this.userId; // ou pegue do auth service
+
+  this.http
+    .request('DELETE', `${this.apiUrl}/books`, {
+      body: { bookId: book.id, userId },
+    })
+    .subscribe({
       next: () => {
         this.books = this.books.filter((b) => b.id !== book.id);
         this.filterBooks();
@@ -150,7 +155,7 @@ export class LibraryPage implements OnInit {
       },
       error: () => this.presentToast('Erro ao remover livro', 'danger'),
     });
-  }
+}
 
   // Atalhos
   markAsRead(book: LibraryBook) {

@@ -3,7 +3,8 @@ ion-content {
   --background: #f6f6f7;
   color: #333;
   font-family: 'Poppins', sans-serif;
-  --padding-bottom: 70px;
+  --padding-bottom: 90px;
+  
 }
 
 ion-toolbar {
@@ -18,7 +19,8 @@ ion-card {
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   background-color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 20px;  
+  z-index: 999 !important;
 }
 
 ion-card-content {
@@ -36,6 +38,7 @@ ion-card p {
   color: #555;
   font-size: 14px;
   line-height: 1.4;
+  z-index: 999 !important;
 }
 
 h3 {
@@ -111,13 +114,11 @@ h3 {
   --color: #fff;
   --color-selected: #000000;
   border-top: 1px solid #e6e6e6;
-  position: fixed !important;
   left: 0; right: 0; bottom: 0;
   height: 58px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30;
 }
 
 .custom-tab-bar ion-tab-button {
@@ -133,6 +134,8 @@ h3 {
   font-weight: bold;
   font-size: 12px;
   margin-top: 10px;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 @media (max-width: 360px) {

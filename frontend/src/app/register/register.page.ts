@@ -64,7 +64,7 @@ export class RegisterPage {
       password: this.senha
     };
 
-    const endpoint = `${this.apiUrl}/register`;
+    const endpoint = `${this.apiUrl}/auth/register`;
 
     this.http.post(endpoint, usuario)
       .subscribe({

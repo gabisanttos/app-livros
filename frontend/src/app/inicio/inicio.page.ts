@@ -71,11 +71,7 @@ export class InicioPage implements OnInit {
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('userId');
 
-  console.log('🔑 Token:', token);
-  console.log('👤 UserId:', userId);
-
   if (!token || !userId) {
-    console.warn('⚠️ Token ou userId não encontrados no localStorage.');
     this.loading = false;
     return;
   }
@@ -84,10 +80,8 @@ export class InicioPage implements OnInit {
     Authorization: `Bearer ${token}`
   });
 
-  console.log('📡 Fazendo requisição para perfil...');
   this.http.get<any>(`${this.apiUrl}/user/profile`, { headers }).subscribe({
     next: (res) => {
-      console.log('✅ Perfil:', res);
       const name = res?.name || 'usuário(a)';
       const primeiroNome = name.split(' ')[0];
       this.name = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
@@ -95,15 +89,12 @@ export class InicioPage implements OnInit {
     error: (err) => console.error('❌ Erro ao buscar perfil:', err)
   });
 
-  console.log('📘 Buscando recomendações...');
   this.http.get<any>(`${this.apiUrl}/recommendations/user/${userId}`, { headers }).subscribe({
     next: (res) => {
-      console.log('📗 Resposta da API de recomendações:', res);
       this.recommendations = res.suggestions || [];
     },
     error: (err) => console.error('❌ Erro ao buscar recomendações:', err),
     complete: () => {
-      console.log('✅ Recomendações carregadas:', this.recommendations);
       this.loading = false;
     }
   });
@@ -119,7 +110,12 @@ export class InicioPage implements OnInit {
   }
 
   goToLibrary() {
+      console.log('✅ Botão clicado!');
     this.router.navigate(['/library']);
+  }
+
+  goToSaved() {
+    this.router.navigate(['/savedbooks']);
   }
 
   addToLibrary(book: any) {
@@ -128,6 +124,8 @@ export class InicioPage implements OnInit {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'
   });
+
+
 
   const userId = localStorage.getItem('userId');
   const payload = {

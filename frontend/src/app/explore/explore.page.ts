@@ -16,7 +16,7 @@ import {
   IonLabel,
   IonButton,
   IonButtons,
-  IonBackButton, IonIcon } from '@ionic/angular/standalone';
+  IonBackButton, IonIcon, IonTabButton, IonTabBar, IonTabs } from '@ionic/angular/standalone';
 
 type BookResult = {
   id?: number | string;
@@ -32,7 +32,7 @@ type BookResult = {
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
   standalone: true,
-  imports: [IonIcon, 
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, 
     CommonModule,
     FormsModule,
     HttpClientModule,
@@ -140,7 +140,7 @@ export class ExplorePage {
       this.loading = false;
       this.error = 'Erro ao buscar livros. Tente novamente.';
     }
-  });
+  }); 
 }
 
   addToLibrary(book: BookResult) {
@@ -160,4 +160,5 @@ export class ExplorePage {
       }
     });
   }
+  
 }
