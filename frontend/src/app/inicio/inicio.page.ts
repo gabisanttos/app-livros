@@ -22,7 +22,6 @@ import {
   IonTabBar,
   IonTabButton,
   IonIcon,
-  IonSpinner
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -50,7 +49,6 @@ import {
     IonTabBar,
     IonTabButton,
     IonIcon,
-    IonSpinner
   ]
 })
 export class InicioPage implements OnInit {
@@ -58,51 +56,65 @@ export class InicioPage implements OnInit {
   recommendations: any[] = [];
   loading = true;
   private apiUrl = environment.apiUrl;
+   private intervalId: any;
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {
+      console.log('Rota atual:', this.router.url);
+  }
 
   ngOnInit() {
     this.loadUserData();
+    
   }
 
   loadUserData() {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
 
-    if (!token || !userId) {
+  console.log('🔑 Token:', token);
+  console.log('👤 UserId:', userId);
+
+  if (!token || !userId) {
+    console.warn('⚠️ Token ou userId não encontrados no localStorage.');
+    this.loading = false;
+    return;
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  console.log('📡 Fazendo requisição para perfil...');
+  this.http.get<any>(`${this.apiUrl}/user/profile`, { headers }).subscribe({
+    next: (res) => {
+      console.log('✅ Perfil:', res);
+      const name = res?.name || 'usuário(a)';
+      const primeiroNome = name.split(' ')[0];
+      this.name = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+    },
+    error: (err) => console.error('❌ Erro ao buscar perfil:', err)
+  });
+
+  console.log('📘 Buscando recomendações...');
+  this.http.get<any>(`${this.apiUrl}/recommendations/user/${userId}`, { headers }).subscribe({
+    next: (res) => {
+      console.log('📗 Resposta da API de recomendações:', res);
+      this.recommendations = res.suggestions || [];
+    },
+    error: (err) => console.error('❌ Erro ao buscar recomendações:', err),
+    complete: () => {
+      console.log('✅ Recomendações carregadas:', this.recommendations);
       this.loading = false;
-      return;
     }
+  });
+}
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
 
-    // Buscar nome do usuário
-    this.http.get<any>(`${this.apiUrl}/user/profile`, { headers }).subscribe({
-      next: (res) => {
-        const name = res?.name || 'usuário(a)';
-        const primeiroNome = name.split(' ')[0];
-        this.name = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
-      },
-      error: (err) => console.error('Erro ao buscar perfil:', err)
-    });
+  goToInicio() {
+  this.router.navigate(['/inicio']);        
+}
 
-    // Buscar recomendações de leitura
-    this.http.get<any[]>(`${this.apiUrl}/recommendations/user/${userId}`, { headers }).subscribe({
-      next: (res) => {
-        this.recommendations = res || [];
-      },
-      error: (err) => console.error('Erro ao buscar recomendações:', err),
-      complete: () => (this.loading = false)
-    });
-  }
-
-  goTo(path: string) {
-    this.router.navigate([path]);
-  }
-
-  goToExplore() {
+  goToExplore() {                     
     this.router.navigate(['/explore']);
   }
 
@@ -119,13 +131,14 @@ export class InicioPage implements OnInit {
 
   const userId = localStorage.getItem('userId');
   const payload = {
-    userId,
-    title: book.title,
-    author: book.author,
-    readingStatus: 'TO_READ',
-    notes: '',
-    thumbnail: book.thumbnail || ''
-  };
+  userId,
+  title: book.title,
+  author: book.author || (book.authors ? book.authors.join(', ') : 'Desconhecido'),
+  readingStatus: 'TO_READ',
+  notes: '',
+  thumbnail: book.thumbnail || book.coverUrl || 'assets/no-cover.png'
+};
+
 
   this.http.post(`${this.apiUrl}/library/add`, payload, { headers }).subscribe({
     next: () => {

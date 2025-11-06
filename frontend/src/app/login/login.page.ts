@@ -12,6 +12,9 @@ import { alertCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 
 interface LoginResponse {
   token: string;
+  user: {
+    id: string;
+  };
 }
 
 @Component({    
@@ -70,14 +73,17 @@ export class LoginPage {
       )
       .subscribe({
         next: (res) => {
+  console.log('🔐 Login Response:', res); // 👈 veja aqui o que vem
 
-          localStorage.setItem('token', res.token);
+  if (res.token && res.user.id) {
+    localStorage.setItem('token', res.token);
+    localStorage.setItem('userId', String(res.user.id));
+    this.router.navigate(['/inicio']);
+  } else {
+    this.presentToast('Erro: resposta inválida do servidor.', 'danger');
+  }
+},
 
-          this.router.navigate(['/inicio']);
-        },
-        error: (err) => {
-          this.presentToast('Email ou senha inválidos.', 'danger');
-        }
     });
 
   }
