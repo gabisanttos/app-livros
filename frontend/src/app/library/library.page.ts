@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment.local';
@@ -19,7 +20,11 @@ import {
   IonSegment,
   IonSegmentButton,
   IonBackButton,
-  IonButtons, IonIcon, IonTabButton } from '@ionic/angular/standalone';
+  IonButtons,
+  IonIcon,
+  IonTabButton,
+  IonTabs,
+  IonTabBar } from '@ionic/angular/standalone';
 
 interface LibraryBook {
   id?: number;
@@ -39,6 +44,7 @@ interface LibraryBook {
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -52,7 +58,11 @@ interface LibraryBook {
     IonSegment,
     IonSegmentButton,
     IonBackButton,
-    IonButtons
+    IonButtons,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonIcon
   ]
 })
 export class LibraryPage implements OnInit {
@@ -74,7 +84,7 @@ export class LibraryPage implements OnInit {
 
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private toastCtrl: ToastController) {}
+  constructor(private http: HttpClient, private toastCtrl: ToastController, private router: Router) {}
 
   ngOnInit() {
     this.loadBooks();
@@ -141,7 +151,7 @@ export class LibraryPage implements OnInit {
   }
 
   removeBook(book: LibraryBook) {
-  const userId = this.userId; // ou pegue do auth service
+  const userId = this.userId; 
 
   this.http
     .request('DELETE', `${this.apiUrl}/books`, {
@@ -157,12 +167,28 @@ export class LibraryPage implements OnInit {
     });
 }
 
-  // Atalhos
   markAsRead(book: LibraryBook) {
     this.updateStatus(book, 'READ');
   }
 
   markAsReading(book: LibraryBook) {
     this.updateStatus(book, 'READING');
+  }
+
+  goToInicio() {
+  this.router.navigate(['/inicio']);        
+}
+
+  goToExplore() {                     
+    this.router.navigate(['/explore']);
+  }
+
+  goToLibrary() {
+      console.log('✅ Botão clicado!');
+    this.router.navigate(['/library']);
+  }
+
+  goToSaved() {
+    this.router.navigate(['/savedbooks']);
   }
 }

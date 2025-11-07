@@ -14,7 +14,6 @@
     </ion-button>
   </div>
 
-  <!-- Formulário de adição -->
   <div *ngIf="showAdd" class="add-form">
     <form (ngSubmit)="addBook()" #bookForm="ngForm">
       <ion-item lines="none">
@@ -46,7 +45,7 @@
     </form>
   </div>
 
-  <!-- Seção: Lendo -->
+ 
   <h3 class="section-title">Lendo</h3>
   <ion-list *ngIf="reading.length > 0; else noReading">
     <ion-item *ngFor="let b of reading">
@@ -65,7 +64,7 @@
     <div class="empty">Nenhum livro em leitura.</div>
   </ng-template>
 
-  <!-- Seção: Lidos -->
+  
   <h3 class="section-title">Lidos</h3>
   <ion-list *ngIf="read.length > 0; else noRead">
     <ion-item *ngFor="let b of read">
@@ -83,4 +82,24 @@
   <ng-template #noRead>
     <div class="empty">Nenhum livro lido ainda.</div>
   </ng-template>
+  <ion-tabs>
+  <ion-tab-bar slot="bottom" class="custom-tab-bar">
+
+    <ion-tab-button tab="inicio" (click)="goToInicio()">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-tab-button>
+      <ion-tab-button tab="explorar" (click)="goToExplore()">
+      <ion-icon name="search-outline"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button tab="biblioteca" (click)="goToLibrary()">
+      <ion-icon name="library-outline"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button tab="salvos" (click)="goToSaved()">
+      <ion-icon name="bookmark-outline"></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>
 </ion-content>

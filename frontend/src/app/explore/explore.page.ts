@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment.local';
 import { ToastController } from '@ionic/angular';
@@ -35,6 +36,7 @@ type BookResult = {
   imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, 
     CommonModule,
     FormsModule,
+    RouterModule,
     HttpClientModule,
     IonHeader,
     IonToolbar,
@@ -48,6 +50,10 @@ type BookResult = {
     IonButton,
     IonButtons,
     IonBackButton,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonIcon
   ]
 })
 export class ExplorePage {
@@ -59,10 +65,11 @@ export class ExplorePage {
   private searchTimeout: any = null;
   private apiUrl = environment.apiUrl;
 
-  // Aqui você pode obter o userId do usuário logado (por exemplo, via auth service)
-  private userId = 1; // ⚠️ Troque isso depois para o ID real do usuário autenticado
+  
+  private userId = 1; 
 
   constructor(
+    private router: Router,
     private http: HttpClient,
     private toastCtrl: ToastController
   ) {}
@@ -121,7 +128,7 @@ export class ExplorePage {
         };
       });
 
-      // 🔹 Remove duplicados por título + autor principal
+      
       const uniqueBooks = mapped.filter(
         (book, index, self) =>
           index ===
@@ -142,6 +149,23 @@ export class ExplorePage {
     }
   }); 
 }
+  goToInicio() {
+  this.router.navigate(['/inicio']);        
+}
+
+  goToExplore() {                     
+    this.router.navigate(['/explore']);
+  }
+
+  goToLibrary() {
+      console.log('✅ Botão clicado!');
+    this.router.navigate(['/library']);
+  }
+
+  goToSaved() {
+    this.router.navigate(['/savedbooks']);
+  }
+
 
   addToLibrary(book: BookResult) {
     const payload = {

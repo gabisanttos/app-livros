@@ -32,5 +32,29 @@
       </ion-button>
     </ion-item>
   </ion-list>
+
+  
 </ion-content>
+
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom" class="custom-tab-bar">
+
+    <ion-tab-button tab="inicio" href="/inicio">
+      <ion-icon name="home-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="explorar" (click)="goToExplore()">
+      <ion-icon name="search-outline"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button tab="biblioteca" (click)="goToLibrary()">
+      <ion-icon name="library-outline"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button tab="salvos" (click)="goToSaved()">
+      <ion-icon name="bookmark-outline"></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>
 

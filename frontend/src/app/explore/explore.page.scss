@@ -78,7 +78,40 @@
   padding: 6px 10px;
 }
 
-/* Desktop / tablet grid */
+.custom-tab-bar {
+  --background: #8b6b3e;
+  --color: #fff;
+  --color-selected: #000000;
+  border-top: 1px solid #e6e6e6;
+  left: 0; right: 0; bottom: 0;
+  height: 58px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-tab-bar ion-tab-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.inicio-btn {
+  --background: #8b6b3e;
+  --border-radius: 8px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 10px;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+@media (max-width: 360px) {
+  ion-toolbar { font-size: 18px; }
+  .book-btn { width: 56px; height: 56px; font-size: 10px; }
+}
+
 @media (min-width: 700px) {
   .results-list {
     display: grid;
