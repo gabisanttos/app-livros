@@ -6,23 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.local';
 
-import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonCard,
-  IonCardContent,
-  IonList,
-  IonItem,
-  IonThumbnail,
-  IonLabel,
-  IonButton,
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
-  IonIcon,
-} from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-inicio',
@@ -34,21 +18,7 @@ import {
     FormsModule,
     RouterModule,
     HttpClientModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonCard,
-    IonCardContent,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonLabel,
-    IonButton,
-    IonTabs,
-    IonTabBar,
-    IonTabButton,
-    IonIcon,
+    IonicModule
   ]
 })
 export class InicioPage implements OnInit {
@@ -56,61 +26,59 @@ export class InicioPage implements OnInit {
   recommendations: any[] = [];
   loading = true;
   private apiUrl = environment.apiUrl;
-   private intervalId: any;
+  private intervalId: any;
 
   constructor(private router: Router, private http: HttpClient) {
-      console.log('Rota atual:', this.router.url);
+    console.log('Rota atual:', this.router.url);
   }
 
   ngOnInit() {
     this.loadUserData();
-    
   }
 
   loadUserData() {
-  const token = localStorage.getItem('token');
-  const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
 
-  if (!token || !userId) {
-    this.loading = false;
-    return;
+    if (!token || !userId) {
+      this.loading = false;
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    this.http.get<any>(`${this.apiUrl}/user/profile`, { headers }).subscribe({
+      next: (res) => {
+        const name = res?.name || 'usuário(a)';
+        const primeiroNome = name.split(' ')[0];
+        this.name = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+      },
+      error: (err) => console.error('❌ Erro ao buscar perfil:', err)
+    });
+
+    this.http.get<any>(`${this.apiUrl}/recommendations/user/${userId}`, { headers }).subscribe({
+      next: (res) => {
+        this.recommendations = res.suggestions || [];
+      },
+      error: (err) => console.error('❌ Erro ao buscar recomendações:', err),
+      complete: () => {
+        this.loading = false;
+      }
+    });
   }
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`
-  });
-
-  this.http.get<any>(`${this.apiUrl}/user/profile`, { headers }).subscribe({
-    next: (res) => {
-      const name = res?.name || 'usuário(a)';
-      const primeiroNome = name.split(' ')[0];
-      this.name = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
-    },
-    error: (err) => console.error('❌ Erro ao buscar perfil:', err)
-  });
-
-  this.http.get<any>(`${this.apiUrl}/recommendations/user/${userId}`, { headers }).subscribe({
-    next: (res) => {
-      this.recommendations = res.suggestions || [];
-    },
-    error: (err) => console.error('❌ Erro ao buscar recomendações:', err),
-    complete: () => {
-      this.loading = false;
-    }
-  });
-}
-
-
   goToInicio() {
-  this.router.navigate(['/inicio']);        
-}
+    this.router.navigate(['/inicio']);
+  }
 
-  goToExplore() {                     
+  goToExplore() {
     this.router.navigate(['/explore']);
   }
 
   goToLibrary() {
-      console.log('✅ Botão clicado!');
+    console.log('✅ Botão clicado!');
     this.router.navigate(['/library']);
   }
 
@@ -118,36 +86,35 @@ export class InicioPage implements OnInit {
     this.router.navigate(['/savedbooks']);
   }
 
-  addToLibrary(book: any) {
-  const token = localStorage.getItem('token');
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  });
-
-
-
-  const userId = localStorage.getItem('userId');
-  const payload = {
-  userId,
-  title: book.title,
-  author: book.author || (book.authors ? book.authors.join(', ') : 'Desconhecido'),
-  readingStatus: 'TO_READ',
-  notes: '',
-  thumbnail: book.thumbnail || book.coverUrl || 'assets/no-cover.png'
-};
-
-
-  this.http.post(`${this.apiUrl}/library/add`, payload, { headers }).subscribe({
-    next: () => {
-      alert('📚 Livro adicionado à sua biblioteca!');
-    },
-    error: (err) => {
-      console.error('Erro ao adicionar livro:', err);
-      alert('❌ Não foi possível adicionar o livro.');
+  goToProfile() {
+  this.router.navigate(['/profile']);
     }
-  });
-}
+    
+  addToLibrary(book: any) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
 
+    const userId = localStorage.getItem('userId');
+    const payload = {
+      userId,
+      title: book.title,
+      author: book.author || (book.authors ? book.authors.join(', ') : 'Desconhecido'),
+      readingStatus: 'TO_READ',
+      notes: '',
+      thumbnail: book.thumbnail || book.coverUrl || 'assets/no-cover.png'
+    };
 
+    this.http.post(`${this.apiUrl}/library/add`, payload, { headers }).subscribe({
+      next: () => {
+        alert('📚 Livro adicionado à sua biblioteca!');
+      },
+      error: (err) => {
+        console.error('Erro ao adicionar livro:', err);
+        alert('❌ Não foi possível adicionar o livro.');
+      }
+    });
+  }
 }

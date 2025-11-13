@@ -1,6 +1,12 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Capitu</ion-title>
+<ion-buttons slot="end">
+  <ion-button (click)="goToProfile()">
+    <ion-icon name="person-circle-outline"></ion-icon>
+  </ion-button>
+</ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -17,7 +23,6 @@
   
 <h3>Baseado em suas leituras</h3>
 
-<!-- Se houver recomendações -->
 <ion-list *ngIf="recommendations.length > 0" class="book-list">
   <ion-item *ngFor="let book of recommendations" class="book-item">
     <ion-thumbnail slot="start" class="book-thumb">
