@@ -1,22 +1,16 @@
+// src/app/explore/explore.page.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+<<<<<<< HEAD
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+=======
+import { Router, RouterModule } from '@angular/router';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+>>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
 import { environment } from 'src/environments/environment.local';
 import { ToastController } from '@ionic/angular';
-import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonSearchbar,
-  IonList,
-  IonItem,
-  IonThumbnail,
-  IonLabel,
-  IonButton,
-  IonButtons,
-  IonBackButton, IonIcon, IonTabButton, IonTabBar, IonTabs } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 
 type BookResult = {
   id?: number | string;
@@ -32,10 +26,11 @@ type BookResult = {
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, 
+  imports: [
     CommonModule,
     FormsModule,
     HttpClientModule,
+<<<<<<< HEAD
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -48,6 +43,9 @@ type BookResult = {
     IonButton,
     IonButtons,
     IonBackButton,
+=======
+    IonicModule
+>>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
   ]
 })
 export class ExplorePage {
@@ -57,15 +55,21 @@ export class ExplorePage {
   error: string | null = null;
 
   private searchTimeout: any = null;
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl || '';
 
+<<<<<<< HEAD
   // Aqui você pode obter o userId do usuário logado (por exemplo, via auth service)
   private userId = 1; // ⚠️ Troque isso depois para o ID real do usuário autenticado
+=======
+  private userId = 1;
+>>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
 
   constructor(
     private http: HttpClient,
     private toastCtrl: ToastController
-  ) {}
+  ) {
+    console.log('ExplorePage inicializada — apiUrl =', this.apiUrl);
+  }
 
   async showToast(message: string, color: string = 'success') {
     const toast = await this.toastCtrl.create({
@@ -78,8 +82,12 @@ export class ExplorePage {
   }
 
   onSearch(event: any) {
-    const q = (event?.detail?.value ?? event?.target?.value ?? '').trim();
+    const value =
+      (event?.detail?.value ?? event?.target?.value ?? event)?.toString?.() ?? '';
+    const q = value.trim();
     this.query = q;
+
+    console.log('onSearch fired, query =', q);
 
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
@@ -96,9 +104,11 @@ export class ExplorePage {
   }
 
   private searchBooks(q: string) {
-  this.loading = true;
-  this.error = null;
+    this.loading = true;
+    this.error = null;
+    this.books = [];
 
+<<<<<<< HEAD
   this.http.get(`${this.apiUrl}/books/search?q=${encodeURIComponent(q)}`).subscribe({
     next: (res: any) => {
       const items = Array.isArray(res) ? res : [];
@@ -133,15 +143,83 @@ export class ExplorePage {
       );
 
       this.books = uniqueBooks;
+=======
+    if (!this.apiUrl) {
+      console.warn('API URL vazio — não é possível buscar. query:', q);
+      this.error = 'API não configurada (apiUrl vazia).';
+>>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
       this.loading = false;
-    },
-    error: (err) => {
-      console.error('Erro ao buscar livros', err);
-      this.loading = false;
-      this.error = 'Erro ao buscar livros. Tente novamente.';
+      return;
     }
+<<<<<<< HEAD
   }); 
 }
+=======
+
+    const url = `${this.apiUrl}/books/search`;
+    const params = new HttpParams().set('q', q);
+
+    console.log('Chamando backend:', url, 'params:', params.toString());
+
+    this.http.get(url, { params, observe: 'body' }).subscribe({
+      next: (res: any) => {
+        console.log('Resposta /books/search:', res);
+
+        const items: any[] = Array.isArray(res)
+          ? res
+          : Array.isArray(res.items)
+            ? res.items
+            : Array.isArray(res.results)
+              ? res.results
+              : [];
+
+        const mapped: BookResult[] = (items || []).map((it: any) => {
+          const thumbnail =
+            it.thumbnail ||
+            (it.cover_i ? `https://covers.openlibrary.org/b/id/${it.cover_i}-M.jpg` : null) ||
+            it.coverUrl ||
+            null;
+
+          return {
+            id: it.id ?? it.key ?? it.cover_i ?? Math.random().toString(36).slice(2, 9),
+            title: (it.title || it.name || '').toString().trim() || 'Sem título',
+            authors: it.authors || it.author_name || (it.author ? [it.author] : []) || [],
+            thumbnail,
+            publishedDate: it.publishedDate || it.first_publish_year || it.year || null,
+            raw: it
+          } as BookResult;
+        });
+
+        // Tipagem explícita nos parâmetros do filter para evitar TS7006
+        const uniqueBooks = mapped.filter((book: BookResult, index: number, self: BookResult[]) =>
+          index === self.findIndex((b: BookResult) =>
+            (b.title || '').toLowerCase() === (book.title || '').toLowerCase() &&
+            ((b.authors?.[0] || '') === (book.authors?.[0] || ''))
+          )
+        );
+
+        this.books = uniqueBooks;
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Erro ao buscar livros', err);
+        this.loading = false;
+        if (err?.status === 0) {
+          this.error = 'Erro de conexão: verifique CORS / se a API está rodando.';
+        } else if (err?.status >= 400 && err?.status < 500) {
+          this.error = 'Requisição inválida. Tente outro termo.';
+        } else {
+          this.error = 'Erro ao buscar livros. Tente novamente mais tarde.';
+        }
+      }
+    });
+  }
+
+  goToInicio() { this.router.navigate(['/inicio']); }
+  goToExplore() { this.router.navigate(['/explore']); }
+  goToLibrary() { this.router.navigate(['/library']); }
+  goToSaved() { this.router.navigate(['/savedbooks']); }
+>>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
 
   addToLibrary(book: BookResult) {
     const payload = {
@@ -154,11 +232,10 @@ export class ExplorePage {
       next: () => {
         this.showToast('📚 Livro adicionado à sua biblioteca!');
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao adicionar livro', err);
         this.showToast('❌ Erro ao adicionar livro. Tente novamente.', 'danger');
       }
     });
   }
-  
 }

@@ -10,12 +10,12 @@
 <ion-content class="ion-padding explore-content">
   <div class="search-wrap">
     <ion-searchbar
-      placeholder="Pesquisar livros ou autores"
-      [(ngModel)]="query"
-      (ionInput)="onSearch($event)"
-      debounce="300"
-      showCancelButton="focus">
-    </ion-searchbar>
+  placeholder="Pesquisar livros ou autores"
+  [(ngModel)]="query"
+  (ionInput)="onSearch($event)"
+  debounce="300"
+  showCancelButton="focus">
+</ion-searchbar>
   </div>
 
   <div *ngIf="loading" class="helper-txt">Buscando...</div>
