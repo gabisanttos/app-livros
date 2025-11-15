@@ -1,16 +1,9 @@
-// src/app/explore/explore.page.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-<<<<<<< HEAD
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-=======
-import { Router, RouterModule } from '@angular/router';
-import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
->>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
 import { environment } from 'src/environments/environment.local';
-import { ToastController } from '@ionic/angular';
-import { IonicModule } from '@ionic/angular';
+import { ToastController, IonicModule } from '@ionic/angular';
 
 type BookResult = {
   id?: number | string;
@@ -30,22 +23,7 @@ type BookResult = {
     CommonModule,
     FormsModule,
     HttpClientModule,
-<<<<<<< HEAD
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonSearchbar,
-    IonList,
-    IonItem,
-    IonThumbnail,
-    IonLabel,
-    IonButton,
-    IonButtons,
-    IonBackButton,
-=======
     IonicModule
->>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
   ]
 })
 export class ExplorePage {
@@ -56,13 +34,7 @@ export class ExplorePage {
 
   private searchTimeout: any = null;
   private apiUrl = environment.apiUrl || '';
-
-<<<<<<< HEAD
-  // Aqui você pode obter o userId do usuário logado (por exemplo, via auth service)
-  private userId = 1; // ⚠️ Troque isso depois para o ID real do usuário autenticado
-=======
   private userId = 1;
->>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
 
   constructor(
     private http: HttpClient,
@@ -87,8 +59,6 @@ export class ExplorePage {
     const q = value.trim();
     this.query = q;
 
-    console.log('onSearch fired, query =', q);
-
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
 
     if (!q || q.length < 2) {
@@ -108,118 +78,44 @@ export class ExplorePage {
     this.error = null;
     this.books = [];
 
-<<<<<<< HEAD
-  this.http.get(`${this.apiUrl}/books/search?q=${encodeURIComponent(q)}`).subscribe({
-    next: (res: any) => {
-      const items = Array.isArray(res) ? res : [];
-
-      // Mapeia resultados e monta capa
-      const mapped = items.map((it: any) => {
-        const thumbnail = it.cover_i
-          ? `https://covers.openlibrary.org/b/id/${it.cover_i}-M.jpg`
-          : null;
-
-        return {
-          id: it.key, // "/works/OL12345W"
-          title: it.title?.trim() || 'Sem título',
-          authors: it.author_name || [],
-          thumbnail,
-          publishedDate: it.first_publish_year
-            ? it.first_publish_year.toString()
-            : null,
-          raw: it,
-        };
-      });
-
-      // 🔹 Remove duplicados por título + autor principal
-      const uniqueBooks = mapped.filter(
-        (book, index, self) =>
-          index ===
-          self.findIndex(
-            (b) =>
-              b.title.toLowerCase() === book.title.toLowerCase() &&
-              (b.authors[0] || '') === (book.authors[0] || '')
-          )
-      );
-
-      this.books = uniqueBooks;
-=======
-    if (!this.apiUrl) {
-      console.warn('API URL vazio — não é possível buscar. query:', q);
-      this.error = 'API não configurada (apiUrl vazia).';
->>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
-      this.loading = false;
-      return;
-    }
-<<<<<<< HEAD
-  }); 
-}
-=======
-
-    const url = `${this.apiUrl}/books/search`;
-    const params = new HttpParams().set('q', q);
-
-    console.log('Chamando backend:', url, 'params:', params.toString());
-
-    this.http.get(url, { params, observe: 'body' }).subscribe({
+    this.http.get(`${this.apiUrl}/books/search?q=${encodeURIComponent(q)}`).subscribe({
       next: (res: any) => {
-        console.log('Resposta /books/search:', res);
+        const items = Array.isArray(res) ? res : [];
 
-        const items: any[] = Array.isArray(res)
-          ? res
-          : Array.isArray(res.items)
-            ? res.items
-            : Array.isArray(res.results)
-              ? res.results
-              : [];
-
-        const mapped: BookResult[] = (items || []).map((it: any) => {
-          const thumbnail =
-            it.thumbnail ||
-            (it.cover_i ? `https://covers.openlibrary.org/b/id/${it.cover_i}-M.jpg` : null) ||
-            it.coverUrl ||
-            null;
+        const mapped = items.map((it: any) => {
+          const thumbnail = it.cover_i
+            ? `https://covers.openlibrary.org/b/id/${it.cover_i}-M.jpg`
+            : null;
 
           return {
-            id: it.id ?? it.key ?? it.cover_i ?? Math.random().toString(36).slice(2, 9),
-            title: (it.title || it.name || '').toString().trim() || 'Sem título',
-            authors: it.authors || it.author_name || (it.author ? [it.author] : []) || [],
+            id: it.key,
+            title: it.title?.trim() || 'Sem título',
+            authors: it.author_name || [],
             thumbnail,
-            publishedDate: it.publishedDate || it.first_publish_year || it.year || null,
-            raw: it
-          } as BookResult;
+            publishedDate: it.first_publish_year?.toString() ?? null,
+            raw: it,
+          };
         });
 
-        // Tipagem explícita nos parâmetros do filter para evitar TS7006
-        const uniqueBooks = mapped.filter((book: BookResult, index: number, self: BookResult[]) =>
-          index === self.findIndex((b: BookResult) =>
-            (b.title || '').toLowerCase() === (book.title || '').toLowerCase() &&
-            ((b.authors?.[0] || '') === (book.authors?.[0] || ''))
-          )
+        const uniqueBooks = mapped.filter(
+          (book, index, self) =>
+            index ===
+            self.findIndex(
+              (b) =>
+                b.title.toLowerCase() === book.title.toLowerCase() &&
+                (b.authors[0] || '') === (book.authors[0] || '')
+            )
         );
 
         this.books = uniqueBooks;
         this.loading = false;
       },
-      error: (err: any) => {
-        console.error('Erro ao buscar livros', err);
+      error: () => {
         this.loading = false;
-        if (err?.status === 0) {
-          this.error = 'Erro de conexão: verifique CORS / se a API está rodando.';
-        } else if (err?.status >= 400 && err?.status < 500) {
-          this.error = 'Requisição inválida. Tente outro termo.';
-        } else {
-          this.error = 'Erro ao buscar livros. Tente novamente mais tarde.';
-        }
+        this.error = 'Erro ao buscar livros. Tente novamente.';
       }
     });
   }
-
-  goToInicio() { this.router.navigate(['/inicio']); }
-  goToExplore() { this.router.navigate(['/explore']); }
-  goToLibrary() { this.router.navigate(['/library']); }
-  goToSaved() { this.router.navigate(['/savedbooks']); }
->>>>>>> c895c44 (Adiciona tela de perfil e melhorias de layout)
 
   addToLibrary(book: BookResult) {
     const payload = {
@@ -232,8 +128,7 @@ export class ExplorePage {
       next: () => {
         this.showToast('📚 Livro adicionado à sua biblioteca!');
       },
-      error: (err: any) => {
-        console.error('Erro ao adicionar livro', err);
+      error: () => {
         this.showToast('❌ Erro ao adicionar livro. Tente novamente.', 'danger');
       }
     });
