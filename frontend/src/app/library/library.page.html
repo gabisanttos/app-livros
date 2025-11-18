@@ -7,80 +7,110 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding library-content">
+<ion-content class="ion-padding biblioteca-content">
+
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" class="custom-tab-bar">
+      <ion-tab-button tab="inicio" routerLink="/inicio" routerLinkActive="tab-active">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="explorar" routerLink="/explore" routerLinkActive="tab-active">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="biblioteca" routerLink="/library" routerLinkActive="tab-active">
+        <ion-icon name="library-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="salvos" routerLink="/savedbooks" routerLinkActive="tab-active">
+        <ion-icon name="bookmark-outline"></ion-icon>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+  
   <div class="top-actions">
     <ion-button expand="block" (click)="toggleAdd()" class="add-toggle">
       {{ showAdd ? 'Fechar' : 'Adicionar livro' }}
     </ion-button>
   </div>
 
-  <!-- Formulário de adição -->
   <div *ngIf="showAdd" class="add-form">
     <form (ngSubmit)="addBook()" #bookForm="ngForm">
-      <ion-item lines="none">
+      <ion-item lines="none" class="input-item">
         <ion-label position="stacked">Título</ion-label>
-        <ion-input name="title" required [(ngModel)]="form.title"></ion-input>
+        <ion-input name="title" required [(ngModel)]="form.title" placeholder="Ex: Fahrenheit 451"></ion-input>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item lines="none" class="input-item">
         <ion-label position="stacked">Autor</ion-label>
-        <ion-input name="author" [(ngModel)]="form.author"></ion-input>
+        <ion-input name="author" [(ngModel)]="form.author" placeholder="Ex: Ray Bradbury"></ion-input>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item lines="none" class="input-item">
         <ion-label position="stacked">Status</ion-label>
-        <ion-segment [(ngModel)]="form.readingStatus" name="readingStatus">
-          <ion-segment-button value="READING">Lendo</ion-segment-button>
-          <ion-segment-button value="READ">Lido</ion-segment-button>
+        <ion-segment [(ngModel)]="form.status" name="status">
+          <ion-segment-button value="lendo">Lendo</ion-segment-button>
+          <ion-segment-button value="lido">Lido</ion-segment-button>
         </ion-segment>
       </ion-item>
 
-      <ion-item lines="none">
+      <ion-item lines="none" class="input-item">
         <ion-label position="stacked">Notas (opcional)</ion-label>
-        <ion-textarea name="notes" rows="3" [(ngModel)]="form.notes"></ion-textarea>
+        <ion-textarea rows="3" name="notes" [(ngModel)]="form.notes" placeholder="O que achou?"></ion-textarea>
       </ion-item>
 
-      <ion-button expand="block" type="submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'Salvando...' : 'Adicionar à biblioteca' }}
+      <ion-button expand="block" type="submit" [disabled]="isSubmitting" class="submit-btn">
+        {{ isSubmitting ? 'Adicionando...' : 'Adicionar à biblioteca' }}
       </ion-button>
     </form>
   </div>
 
-  <!-- Seção: Lendo -->
   <h3 class="section-title">Lendo</h3>
   <ion-list *ngIf="reading.length > 0; else noReading">
-    <ion-item *ngFor="let b of reading">
+    <ion-item *ngFor="let b of reading" class="book-item">
+      <ion-thumbnail slot="start" class="thumb">
+        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" />
+      </ion-thumbnail>
+
       <ion-label>
-        <h2>{{ b.title }}</h2>
-        <p *ngIf="b.author">{{ b.author }}</p>
-        <p *ngIf="b.notes" class="notes">📝 {{ b.notes }}</p>
+        <h2 class="title">{{ b.title }}</h2>
+        <p class="meta">{{ b.author || 'Autor desconhecido' }}</p>
+        <p class="notes" *ngIf="b.notes">{{ b.notes }}</p>
       </ion-label>
+
       <div class="item-actions">
         <ion-button size="small" fill="clear" (click)="markAsRead(b)">Marcar como lido</ion-button>
         <ion-button size="small" color="danger" fill="clear" (click)="removeBook(b)">Remover</ion-button>
       </div>
     </ion-item>
   </ion-list>
+
   <ng-template #noReading>
-    <div class="empty">Nenhum livro em leitura.</div>
+    <div class="empty">Você não está lendo nenhum livro no momento.</div>
   </ng-template>
 
-  <!-- Seção: Lidos -->
   <h3 class="section-title">Lidos</h3>
   <ion-list *ngIf="read.length > 0; else noRead">
-    <ion-item *ngFor="let b of read">
+    <ion-item *ngFor="let b of read" class="book-item">
+      <ion-thumbnail slot="start" class="thumb">
+        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" />
+      </ion-thumbnail>
+
       <ion-label>
-        <h2>{{ b.title }}</h2>
-        <p *ngIf="b.author">{{ b.author }}</p>
-        <p *ngIf="b.notes" class="notes">📝 {{ b.notes }}</p>
+        <h2 class="title">{{ b.title }}</h2>
+        <p class="meta">{{ b.author || 'Autor desconhecido' }}</p>
+        <p class="notes" *ngIf="b.notes">{{ b.notes }}</p>
       </ion-label>
+
       <div class="item-actions">
-        <ion-button size="small" fill="clear" (click)="markAsReading(b)">Voltar para lendo</ion-button>
+        <ion-button size="small" fill="clear" (click)="markAsReading(b)">Mover para Lendo</ion-button>
         <ion-button size="small" color="danger" fill="clear" (click)="removeBook(b)">Remover</ion-button>
       </div>
     </ion-item>
   </ion-list>
+
   <ng-template #noRead>
-    <div class="empty">Nenhum livro lido ainda.</div>
+    <div class="empty">Nenhum livro marcado como lido.</div>
   </ng-template>
 </ion-content>

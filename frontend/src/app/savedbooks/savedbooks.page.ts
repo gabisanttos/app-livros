@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicModule, NavController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // ✅ importar Router
 
 @Component({
   selector: 'app-savedbooks',
@@ -15,7 +16,6 @@ export class SavedbooksPage {
       title: 'Dom Casmurro',
       author: 'Machado de Assis',
       notes: 'Um clássico da literatura brasileira.',
-
     },
     {
       title: '1984',
@@ -24,10 +24,36 @@ export class SavedbooksPage {
     }
   ];
 
-  constructor(private navCtrl: NavController) {}
+  constructor(
+    private navCtrl: NavController,
+    private router: Router // ✅ injetando Router
+  ) {}
 
   goBack() {
     this.navCtrl.navigateBack('/library');
+  }
+
+  // =============================
+  // Navegação do Tab Bar
+  // =============================
+  goToInicio() {
+    this.router.navigate(['/inicio']);
+  }
+
+  goToExplore() {
+    this.router.navigate(['/explore']);
+  }
+
+  goToLibrary() {
+    this.router.navigate(['/library']);
+  }
+
+  goToSaved() {
+    this.router.navigate(['/savedbooks']);
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 
   removeBook(book: any) {

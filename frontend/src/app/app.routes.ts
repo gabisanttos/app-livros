@@ -63,10 +63,12 @@ export const routes: Routes = [
   {
     path: 'savedbooks',
     loadComponent: () => import('./savedbooks/savedbooks.page').then( m => m.SavedbooksPage)
-  },  {
+  },
+  {
     path: 'profile',
     loadComponent: () => import('./profile/profile.page').then( m => m.ProfilePage)
   },
+
 
 
 

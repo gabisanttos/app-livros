@@ -1,9 +1,11 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment.local';
 import { ToastController, IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router'; 
 
 type BookResult = {
   id?: number | string;
@@ -23,7 +25,8 @@ type BookResult = {
     CommonModule,
     FormsModule,
     HttpClientModule,
-    IonicModule
+    IonicModule,
+    RouterModule 
   ]
 })
 export class ExplorePage {
@@ -38,9 +41,30 @@ export class ExplorePage {
 
   constructor(
     private http: HttpClient,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private router: Router 
   ) {
     console.log('ExplorePage inicializada — apiUrl =', this.apiUrl);
+  }
+
+  goToInicio() {
+    this.router.navigate(['/inicio']);
+  }
+
+  goToExplore() {
+    this.router.navigate(['/explore']);
+  }
+
+  goToLibrary() {
+    this.router.navigate(['/library']);
+  }
+
+  goToSaved() {
+    this.router.navigate(['/savedbooks']);
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 
   async showToast(message: string, color: string = 'success') {

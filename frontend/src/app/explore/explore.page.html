@@ -7,41 +7,57 @@
   </ion-toolbar>
 </ion-header>
 
+
+
 <ion-content class="ion-padding explore-content">
+
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" class="custom-tab-bar">
+      <ion-tab-button tab="inicio" routerLink="/inicio" routerLinkActive="tab-active">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="explorar" routerLink="/explore" routerLinkActive="tab-active">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="biblioteca" routerLink="/library" routerLinkActive="tab-active">
+        <ion-icon name="library-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="salvos" routerLink="/savedbooks" routerLinkActive="tab-active">
+        <ion-icon name="bookmark-outline"></ion-icon>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
   <div class="search-wrap">
     <ion-searchbar
-  placeholder="Pesquisar livros ou autores"
-  [(ngModel)]="query"
-  (ionInput)="onSearch($event)"
-  debounce="300"
-  showCancelButton="focus">
-</ion-searchbar>
+      placeholder="Pesquisar livros ou autores"
+      [(ngModel)]="query"
+      (ionInput)="onSearch($event)"
+      debounce="300"
+      showCancelButton="focus">
+    </ion-searchbar>
   </div>
 
   <div *ngIf="loading" class="helper-txt">Buscando...</div>
   <div *ngIf="error" class="helper-txt error">{{ error }}</div>
-
   <div *ngIf="!loading && !error && query && books.length === 0" class="helper-txt">
     Nenhum resultado encontrado.
   </div>
 
-  <ion-list class="results-list" *ngIf="books && books.length > 0">
-    <ion-item *ngFor="let b of books" class="result-item" lines="none">
-      <ion-thumbnail slot="start" class="thumb">
-        <img [src]="b.thumbnail" alt="{{ b.title }}" />
-      </ion-thumbnail>
+  <div class="results-grid" *ngIf="books && books.length > 0">
+    <div *ngFor="let b of books" class="grid-item">
+      <div class="book-card">
+        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" alt="{{ b.title }}" />
+        <div class="book-info">
+          <h3>{{ b.title }}</h3>
+          <p>{{ b.authors?.length ? (b.authors.join(', ')) : 'Autor desconhecido' }}</p>
+          <ion-button expand="block" size="small" (click)="addToLibrary(b)">Adicionar</ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <ion-label class="result-label">
-        <h2 class="title">{{ b.title }}</h2>
-        <p class="authors">{{ b.authors?.length ? (b.authors.join(', ')) : 'Autor desconhecido' }}</p>
-        <p class="meta" *ngIf="b.publishedDate">Publicado: {{ b.publishedDate }}</p>
-      </ion-label>
-
-      <ion-button slot="end" size="small" class="add-btn" (click)="addToLibrary(b)">
-        Adicionar
-      </ion-button>
-    </ion-item>
-  </ion-list>
 </ion-content>
-
-
