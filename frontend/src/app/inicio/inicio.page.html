@@ -10,7 +10,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding with-tabbar">
 
   <ion-card>
     <ion-card-content>
@@ -23,21 +23,25 @@
   
 <h3>Baseado em suas leituras</h3>
 
-<ion-list *ngIf="recommendations.length > 0" class="book-list">
-  <ion-item *ngFor="let book of recommendations" class="book-item">
-    <ion-thumbnail slot="start" class="book-thumb">
-      <img [src]="book.thumbnail" [alt]="book.title" />
-    </ion-thumbnail>
-    <ion-label class="book-label">
-      <h2 class="book-title">{{ book.title }}</h2>
-      <p class="book-author">{{ book.author }}</p>
-      <p class="book-info">{{ book.info }}</p>
-    </ion-label>
-    <ion-button slot="end" fill="solid" size="small" class="book-btn">
+<div *ngIf="recommendations.length > 0" class="book-grid">
+  <div *ngFor="let book of recommendations" class="book-card">
+    
+<img class="thumb" [src]="book.coverUrl || 'assets/no-cover.png'" />
+
+
+    <div class="book-info">
+      <h2 class="title">{{ book.title }}</h2>
+      <p class="author">{{ book.author }}</p>
+      <p class="desc">{{ book.info }}</p>
+    </div>
+
+    <ion-button expand="block" size="small" class="add-btn">
       Adicionar
     </ion-button>
-  </ion-item>
-</ion-list>
+
+  </div>
+</div>
+
 
 <!-- Se não houver recomendações -->
 <ion-card class="ion-text-center" *ngIf="recommendations.length === 0" button="true">
@@ -51,25 +55,23 @@
 </ion-card>
 
 
-<ion-tabs>
-  <ion-tab-bar slot="bottom" class="custom-tab-bar">
+<div class="bottom-tabs">
+  <ion-tab-button tab="inicio" href="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+  </ion-tab-button>
 
-    <ion-tab-button tab="inicio" href="/inicio">
-      <ion-icon name="home-outline"></ion-icon>
-    </ion-tab-button>
-    <ion-tab-button tab="explorar" (click)="goToExplore()">
-      <ion-icon name="search-outline"></ion-icon>
-    </ion-tab-button>
+  <ion-tab-button tab="explorar" (click)="goToExplore()">
+    <ion-icon name="search-outline"></ion-icon>
+  </ion-tab-button>
 
-    <ion-tab-button tab="biblioteca" (click)="goToLibrary()">
-      <ion-icon name="library-outline"></ion-icon>
-    </ion-tab-button>
+  <ion-tab-button tab="biblioteca" (click)="goToLibrary()">
+    <ion-icon name="library-outline"></ion-icon>
+  </ion-tab-button>
 
-    <ion-tab-button tab="salvos" (click)="goToSaved()">
-      <ion-icon name="bookmark-outline"></ion-icon>
-    </ion-tab-button>
+  <ion-tab-button tab="salvos" (click)="goToSaved()">
+    <ion-icon name="bookmark-outline"></ion-icon>
+  </ion-tab-button>
+</div>
 
-  </ion-tab-bar>
-</ion-tabs>
 
 </ion-content>

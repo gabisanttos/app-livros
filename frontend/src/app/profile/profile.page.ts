@@ -19,12 +19,6 @@ import { UserService, UserProfile } from '../services/user'; // assume src/app/s
         </ion-buttons>
 
         <ion-title>Perfil</ion-title>
-
-        <ion-buttons slot="end">
-          <ion-button (click)="goToSettings()" title="Configurações">
-            <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
       </ion-toolbar>
 
       <ion-toolbar>
@@ -48,7 +42,6 @@ import { UserService, UserProfile } from '../services/user'; // assume src/app/s
               <img [src]="userAvatar" alt="avatar">
             </ion-avatar>
             <ion-card-title>{{ user?.name || 'Usuário' }}</ion-card-title>
-            <ion-card-subtitle>{{ user?.email }}</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
@@ -71,22 +64,6 @@ import { UserService, UserProfile } from '../services/user'; // assume src/app/s
                     </div>
                   </ion-col>
                 </ion-row>
-
-                <ion-row>
-                  <ion-col size="12" size-md="6">
-                    <div class="info-item">
-                      <div class="label">Idade</div>
-                      <div class="value">{{ user?.age ?? '—' }}</div>
-                    </div>
-                  </ion-col>
-
-                  <ion-col size="12" size-md="6">
-                    <div class="info-item">
-                      <div class="label">Livros lidos</div>
-                      <div class="value">{{ user?.booksRead ?? 0 }}</div>
-                    </div>
-                  </ion-col>
-                </ion-row>
               </ion-grid>
             </div>
 
@@ -99,8 +76,8 @@ import { UserService, UserProfile } from '../services/user'; // assume src/app/s
                     <div class="stat-value">{{ user?.booksRead ?? 0 }}</div>
                   </ion-col>
                   <ion-col size="6" class="stat-col">
-                    <div class="stat-title">Idade</div>
-                    <div class="stat-value">{{ user?.age ?? '—' }}</div>
+                    <div class="stat-title">Lendo</div>
+                    <div class="stat-value">{{ user?.booksReading ?? 0 }}</div>
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -114,13 +91,6 @@ import { UserService, UserProfile } from '../services/user'; // assume src/app/s
             <ion-button expand="block" color="primary" (click)="goToEditProfile()">
               <ion-icon slot="start" name="create-outline"></ion-icon>
               Editar
-            </ion-button>
-          </ion-col>
-
-          <ion-col size="12" size-md="4">
-            <ion-button expand="block" color="medium" (click)="goToSettings()">
-              <ion-icon slot="start" name="settings-outline"></ion-icon>
-              Configurar
             </ion-button>
           </ion-col>
 
@@ -195,9 +165,8 @@ export class ProfilePage implements OnInit {
   }
 
   logout() {
-    (this.userService as any).logout?.();
-    
-    this.router.navigate(['/inicio']);
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 
   goToEditProfile() {

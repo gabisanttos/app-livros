@@ -41,4 +41,14 @@
 
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #f8f0e6 inset !important;
+  box-shadow: 0 0 0px 1000px #f8f0e6 inset !important;
+  -webkit-text-fill-color: #3b2b1b !important;
+}
+
+
+
 

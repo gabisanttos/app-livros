@@ -12,6 +12,7 @@ export interface UserProfile {
   age?: number;
   booksRead?: number;
   avatarUrl?: string;
+  booksReading?: number;
 }
 
 @Injectable({
@@ -26,8 +27,8 @@ export class UserService {
     name: 'Andrey Dias',
     email: 'andrey@example.com',
     phone: '—',
-    age: 0,
-    booksRead: 0
+    booksRead: 0,
+    booksReading: 0
   };
 
   constructor(private http: HttpClient) {

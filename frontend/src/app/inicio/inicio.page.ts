@@ -60,7 +60,20 @@ export class InicioPage implements OnInit {
 
     this.http.get<any>(`${this.apiUrl}/recommendations/user/${userId}`, { headers }).subscribe({
       next: (res) => {
-        this.recommendations = res.suggestions || [];
+        this.recommendations = (res.suggestions || []).map((book: { coverUrl: any; openLibraryData: { cover_i: any; }; }) => {
+  let cover = book.coverUrl;
+
+  // Se não existir coverUrl mas existir cover_i dentro de openLibraryData
+  if (!cover && book.openLibraryData?.cover_i) {
+    cover = `https://covers.openlibrary.org/b/id/${book.openLibraryData.cover_i}-L.jpg`;
+  }
+
+  return {
+    ...book,
+    coverUrl: cover || 'assets/no-cover.png'
+  };
+});
+
       },
       error: (err) => console.error('❌ Erro ao buscar recomendações:', err),
       complete: () => {
@@ -104,7 +117,7 @@ export class InicioPage implements OnInit {
       author: book.author || (book.authors ? book.authors.join(', ') : 'Desconhecido'),
       readingStatus: 'TO_READ',
       notes: '',
-      thumbnail: book.thumbnail || book.coverUrl || 'assets/no-cover.png'
+      coverUrl: book.thumbnail || book.coverUrl || 'assets/no-cover.png'
     };
 
     this.http.post(`${this.apiUrl}/library/add`, payload, { headers }).subscribe({

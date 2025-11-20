@@ -1,12 +1,25 @@
-
+/* Layout geral */
 ion-content {
   --background: #f6f6f7;
+  --padding-bottom: 90px;
   color: #333;
   font-family: 'Poppins', sans-serif;
-  --padding-bottom: 90px;
-  
 }
 
+.with-tabbar {
+  --padding-bottom: 65px;
+}
+
+.thumb {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+
+/* Toolbar */
 ion-toolbar {
   --background: #ffffff;
   --color: #1e1e1e;
@@ -15,11 +28,12 @@ ion-toolbar {
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
+/* Cards */
 ion-card {
+  background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  background-color: #ffffff;
-  margin-bottom: 20px;  
+  margin-bottom: 20px;
   z-index: 999 !important;
 }
 
@@ -28,106 +42,111 @@ ion-card-content {
 }
 
 ion-card h2 {
+  margin-bottom: 6px;
   font-size: 16px;
   font-weight: 600;
   color: #1e1e1e;
-  margin-bottom: 6px;
 }
 
 ion-card p {
-  color: #555;
   font-size: 14px;
+  color: #555;
   line-height: 1.4;
   z-index: 999 !important;
+  text-align: center;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
+/* Títulos */
 h3 {
-  font-weight: 700;
-  color: #1e1e1e;
   margin: 16px 0 8px;
   font-size: 16px;
+  font-weight: 700;
+  color: #1e1e1e;
+  text-align: center;
 }
 
-.book-list {
-  padding: 0 4px;
+/* Lista de livros */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 10px;
 }
 
-.book-item {
-  align-items: center;
-  --padding-start: 10px;
-  --inner-padding-end: 10px;
-  background-color: #fff;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+.book-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 }
 
-.book-thumb img {
-  width: 50px;
-  height: 70px;
-  border-radius: 6px;
+.thumb {
+  width: 100%;
+  height: 160px;
   object-fit: cover;
 }
 
-.book-label {
-  white-space: normal;
-  text-overflow: clip;
-  overflow: visible;
-  display: block;
+.book-info {
+  padding: 8px;
 }
 
-.book-title {
+.title {
   font-size: 14px;
   font-weight: 600;
-  color: #1e1e1e;
   margin: 0;
+  color: #1a1a1a;
 }
 
-.book-author {
-  font-size: 13px;
-  color: #666;
-  margin: 2px 0;
-}
-
-.book-info {
+.author {
   font-size: 12px;
+  color: #666;
+  margin: 4px 0;
+}
+
+.desc {
+  font-size: 11px;
   color: #888;
 }
 
-.book-btn {
+.add-btn {
   --background: #8b6b3e;
   --color: #fff;
-  --border-radius: 20%;
-  --padding-start: 0;
-  --padding-end: 0;
-  width: 64px;
-  height: 40px;
-  font-size: 11px;
-  text-transform: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 6px;
+  border-radius: 8px;
 }
 
-.custom-tab-bar {
+
+
+.bottom-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   --background: #8b6b3e;
   --color: #fff;
   --color-selected: #000000;
-  border-top: 1px solid #e6e6e6;
-  left: 0; right: 0; bottom: 0;
-  height: 58px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-top: 1px solid #e6e6e6;  display: flex;
+  justify-content: space-around;
+  z-index: 1000;
 }
 
-.custom-tab-bar ion-tab-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+ion-tab-button {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  height: 48px !important;
 }
 
+
+/* Botão início */
 .inicio-btn {
   --background: #8b6b3e;
   --border-radius: 8px;
@@ -138,7 +157,16 @@ h3 {
   pointer-events: auto;
 }
 
+/* Responsividade */
 @media (max-width: 360px) {
-  ion-toolbar { font-size: 18px; }
-  .book-btn { width: 56px; height: 56px; font-size: 10px; }
+  ion-toolbar {
+    font-size: 18px;
+  }
+  .book-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 10px;
+  }
 }
+
+

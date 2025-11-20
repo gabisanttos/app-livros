@@ -1,6 +1,14 @@
 {
-  "appId": "com.root.app",
-  "appName": "root",
+  "appId": "com.capitu.app",
+  "appName": "Capitu",
   "webDir": "www",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+
+  "plugins": {
+   "Keyboard": {
+    "resize": "none"
+    }
+  }
 }
+
+
