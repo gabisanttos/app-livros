@@ -1,95 +1,130 @@
+/* src/app/savedbooks/savedbooks.page.scss */
 .savedbooks-content {
   --background: #f5efe6;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   padding-bottom: 90px;
 }
 
-
 .section-title {
-  margin: 12px 0 6px 4px;
+  margin: 12px 6px;
   color: #5c4434;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 18px;
 }
 
-.book-item {
-  --min-height: 80px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  background: #fffdf6;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-  align-items: center;
-}
-
-.thumb img {
-  width: 52px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.title {
-  font-size: 15px;
-  margin: 0;
-  font-weight: 700;
-}
-
-.meta {
-  font-size: 13px;
-  color: #7a6756;
-  margin-top: 4px;
-}
-
-.notes {
-  font-size: 13px;
-  color: #6a5848;
-  margin-top: 6px;
-}
-
-.empty {
-  text-align: center;
-  color: #8a7a6b;
-  margin-top: 20px;
-}
-.custom-tab-bar {
-  --background: #8b6b3e;
-  border-top: 1px solid #ffffff;
-  position: fixed !important;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 58px;
+.row-slider {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 30;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 12px 6px 22px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
-.custom-tab-bar ion-tab-button {
+.row-slider::-webkit-scrollbar { height: 8px; }
+.row-slider::-webkit-scrollbar-thumb {
+  background: rgba(139,107,62,0.35);
+  border-radius: 10px;
+}
+
+.card {
+  flex: 0 0 auto;
+  width: 160px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .2s ease;
+}
+
+.card:hover { transform: translateY(-6px); }
+
+.card-image {
+  position: relative;
+  width: 100%;
+  padding-top: 150%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: flex-end;
+}
+
+.card-overlay {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.62) 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  box-sizing: border-box;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.1;
+  max-height: 2.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.card-author {
+  font-size: 11px;
+  opacity: 0.95;
+  color: rgba(255,255,255,0.95);
+}
+
+.card-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 6;
+  background: rgba(0,0,0,0.45);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
+  transition: background .12s ease, transform .12s ease;
+}
+.card-remove:hover { background: rgba(0,0,0,0.6); transform: scale(1.03); }
+
+.empty {
+  padding: 28px;
+  text-align: center;
+  color: #8a7a6b;
+  font-style: italic;
 }
 
-.custom-tab-bar ion-tab-button[aria-selected="true"] .tab-icon {
-  transform: scale(1.1);
-  opacity: 1;
+.custom-tab-bar {
+  --background: #8b6b3e;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  bottom: 0;
 }
 
-::ng-deep .custom-tab-bar ion-tab-button {
-  --color: #ffffff !important;
+.tab-row { align-items: center; justify-content: center; }
+.tab-col { display: flex; justify-content: center; align-items: center; }
+.custom-tab-bar ion-icon { color: #ffffff; font-size: 22px; }
+
+@media (min-width: 520px) {
+  .card { width: 180px; }
 }
 
-::ng-deep .custom-tab-bar ion-tab-button ion-icon {
-  color: #ffffff !important;
-  fill: #ffffff !important;
-  stroke: none !important;
-  opacity: 1 !important;
-}
-
-::ng-deep .custom-tab-bar ion-tab-button[aria-selected="true"] ion-icon {
-  color: #ffffff !important;
-  fill: #ffffff !important;
-  transform: scale(1.05);
+@media (min-width: 840px) {
+  .card { width: 200px; }
 }

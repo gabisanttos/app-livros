@@ -47,6 +47,14 @@
     Nenhum resultado encontrado.
   </div>
 
+  <ion-list class="results-list" *ngIf="books && books.length > 0">
+    <ion-item *ngFor="let b of books" class="result-item" lines="none">
+      <ion-thumbnail slot="start" class="thumb">
+        <img [src]="b.thumbnail" alt="{{ b.title }}" />
+      </ion-thumbnail>
+    </ion-item>
+  </ion-list>
+
   <div class="results-grid" *ngIf="books && books.length > 0">
     <div *ngFor="let b of books" class="grid-item">
       <div class="book-card">

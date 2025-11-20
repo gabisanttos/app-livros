@@ -7,28 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding biblioteca-content">
-
-  <ion-tabs>
-    <ion-tab-bar slot="bottom" class="custom-tab-bar">
-      <ion-tab-button tab="inicio" routerLink="/inicio" routerLinkActive="tab-active">
-        <ion-icon name="home-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="explorar" routerLink="/explore" routerLinkActive="tab-active">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="biblioteca" routerLink="/library" routerLinkActive="tab-active">
-        <ion-icon name="library-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="salvos" routerLink="/savedbooks" routerLinkActive="tab-active">
-        <ion-icon name="bookmark-outline"></ion-icon>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-  
+<ion-content class="ion-padding biblioteca-content" style="padding-bottom: 90px;">
   <div class="top-actions">
     <ion-button expand="block" (click)="toggleAdd()" class="add-toggle">
       {{ showAdd ? 'Fechar' : 'Adicionar livro' }}
@@ -66,51 +45,98 @@
     </form>
   </div>
 
+  <!-- ROW: Lendo -->
   <h3 class="section-title">Lendo</h3>
-  <ion-list *ngIf="reading.length > 0; else noReading">
-    <ion-item *ngFor="let b of reading" class="book-item">
-      <ion-thumbnail slot="start" class="thumb">
-        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" />
-      </ion-thumbnail>
+  <div class="row-slider" *ngIf="reading.length > 0; else noReading">
+    <div class="card" *ngFor="let b of reading">
+      <div class="card-image" [style.background-image]="'url(' + (b.thumbnail || 'assets/img/book-placeholder.png') + ')'">
+        <button class="card-fav" title="Remover" (click)="removeBook(b); $event.stopPropagation()">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
 
-      <ion-label>
-        <h2 class="title">{{ b.title }}</h2>
-        <p class="meta">{{ b.author || 'Autor desconhecido' }}</p>
-        <p class="notes" *ngIf="b.notes">{{ b.notes }}</p>
-      </ion-label>
+        <div class="card-overlay">
+          <div class="card-title">{{ b.title }}</div>
+          <div class="card-author">{{ b.author || 'Autor desconhecido' }}</div>
 
-      <div class="item-actions">
-        <ion-button size="small" fill="clear" (click)="markAsRead(b)">Marcar como lido</ion-button>
-        <ion-button size="small" color="danger" fill="clear" (click)="removeBook(b)">Remover</ion-button>
+          <div class="card-actions">
+            <ion-button size="small" fill="clear" class="btn-brown small" (click)="markAsRead(b); $event.stopPropagation()"
+              [disabled]="updatingId === b.id || deletingId === b.id">
+              <ng-container *ngIf="updatingId === b.id; else labelRead">
+                <ion-spinner name="dots" style="height:16px; width:16px;"></ion-spinner>
+              </ng-container>
+              <ng-template #labelRead>Marcar como lido</ng-template>
+            </ion-button>
+          </div>
+        </div>
       </div>
-    </ion-item>
-  </ion-list>
+    </div>
+  </div>
 
   <ng-template #noReading>
     <div class="empty">Você não está lendo nenhum livro no momento.</div>
   </ng-template>
 
+  <!-- ROW: Lidos -->
   <h3 class="section-title">Lidos</h3>
-  <ion-list *ngIf="read.length > 0; else noRead">
-    <ion-item *ngFor="let b of read" class="book-item">
-      <ion-thumbnail slot="start" class="thumb">
-        <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" />
-      </ion-thumbnail>
+  <div class="row-slider" *ngIf="read.length > 0; else noRead">
+    <div class="card" *ngFor="let b of read">
+      <div class="card-image" [style.background-image]="'url(' + (b.thumbnail || 'assets/img/book-placeholder.png') + ')'">
+        <button class="card-fav" title="Remover" (click)="removeBook(b); $event.stopPropagation()">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
 
-      <ion-label>
-        <h2 class="title">{{ b.title }}</h2>
-        <p class="meta">{{ b.author || 'Autor desconhecido' }}</p>
-        <p class="notes" *ngIf="b.notes">{{ b.notes }}</p>
-      </ion-label>
+        <div class="card-overlay">
+          <div class="card-title">{{ b.title }}</div>
+          <div class="card-author">{{ b.author || 'Autor desconhecido' }}</div>
 
-      <div class="item-actions">
-        <ion-button size="small" fill="clear" (click)="markAsReading(b)">Mover para Lendo</ion-button>
-        <ion-button size="small" color="danger" fill="clear" (click)="removeBook(b)">Remover</ion-button>
+          <div class="card-actions">
+            <ion-button size="small" fill="clear" class="btn-brown small outline"
+              (click)="markAsReading(b); $event.stopPropagation()" [disabled]="updatingId === b.id || deletingId === b.id">
+              <ng-container *ngIf="updatingId === b.id; else labelReading">
+                <ion-spinner name="dots" style="height:16px; width:16px;"></ion-spinner>
+              </ng-container>
+              <ng-template #labelReading>Mover para Lendo</ng-template>
+            </ion-button>
+          </div>
+        </div>
       </div>
-    </ion-item>
-  </ion-list>
+    </div>
+  </div>
 
   <ng-template #noRead>
     <div class="empty">Nenhum livro marcado como lido.</div>
   </ng-template>
+
 </ion-content>
+
+<ion-footer translucent>
+  <ion-toolbar class="custom-tab-bar">
+    <ion-grid>
+      <ion-row class="tab-row" align-items-center>
+        <ion-col class="tab-col" (click)="goToInicio()">
+          <ion-button fill="clear">
+            <ion-icon name="home-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="tab-col" (click)="goToExplore()">
+          <ion-button fill="clear">
+            <ion-icon name="search-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="tab-col" (click)="goToLibrary()">
+          <ion-button fill="clear">
+            <ion-icon name="library-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="tab-col" (click)="goToSaved()">
+          <ion-button fill="clear">
+            <ion-icon name="bookmark-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

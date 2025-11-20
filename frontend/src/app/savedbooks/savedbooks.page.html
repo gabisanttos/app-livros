@@ -1,50 +1,50 @@
+<!-- src/app/savedbooks/savedbooks.page.html -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>Livros Salvos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/library"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Salvos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="savedbooks-content ion-padding">
-
-    <ion-tabs>
-    <ion-tab-bar slot="bottom" class="custom-tab-bar">
-      <ion-tab-button tab="inicio" routerLink="/inicio" routerLinkActive="tab-active">
-        <ion-icon name="home-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="explorar" routerLink="/explore" routerLinkActive="tab-active">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="biblioteca" routerLink="/library" routerLinkActive="tab-active">
-        <ion-icon name="library-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="salvos" routerLink="/savedbooks" routerLinkActive="tab-active">
-        <ion-icon name="bookmark-outline"></ion-icon>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-
+<ion-content class="savedbooks-content ion-padding" style="padding-bottom:90px;">
   <h2 class="section-title">Seus Livros Salvos</h2>
 
-  <div *ngIf="savedBooks.length === 0" class="empty">
-    Nenhum livro salvo ainda. 💭
-  </div>
+  <div *ngIf="savedBooks.length === 0" class="empty">Nenhum livro salvo ainda.</div>
 
-  <ion-list>
-    <ion-item *ngFor="let book of savedBooks" class="book-item">
-      <ion-thumbnail slot="start" class="thumb">
-      </ion-thumbnail>
-      <ion-label>
-        <h3 class="title">{{ book.title }}</h3>
-        <p class="meta">{{ book.author }}</p>
-        <p class="notes">{{ book.notes }}</p>
-      </ion-label>
-      <ion-button fill="clear" color="danger" (click)="removeBook(book)">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <div class="row-slider" *ngIf="savedBooks.length > 0">
+    <div class="card" *ngFor="let b of savedBooks">
+      <div class="card-image" [style.background-image]="'url(' + (b.thumbnail || 'assets/img/book-placeholder.png') + ')'" (click)="openBook(b)">
+        <button class="card-remove" (click)="confirmRemove(b); $event.stopPropagation()">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+        <div class="card-overlay">
+          <div class="card-title">{{ b.title }}</div>
+          <div class="card-author">{{ b.author || 'Autor desconhecido' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
+<ion-footer translucent>
+  <ion-toolbar class="custom-tab-bar">
+    <ion-grid>
+      <ion-row class="tab-row" align-items-center>
+        <ion-col class="tab-col" (click)="goToInicio()">
+          <ion-button fill="clear"><ion-icon name="home-outline"></ion-icon></ion-button>
+        </ion-col>
+        <ion-col class="tab-col" (click)="goToExplore()">
+          <ion-button fill="clear"><ion-icon name="search-outline"></ion-icon></ion-button>
+        </ion-col>
+        <ion-col class="tab-col" (click)="goToLibrary()">
+          <ion-button fill="clear"><ion-icon name="library-outline"></ion-icon></ion-button>
+        </ion-col>
+        <ion-col class="tab-col" (click)="goToSaved()">
+          <ion-button fill="clear"><ion-icon name="bookmark-outline"></ion-icon></ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

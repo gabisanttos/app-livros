@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/library/library.page.ts
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ToastController, AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment.local';
 
-interface LibraryBook {
-  id?: number;
+export interface LibraryBook {
+  id?: number | string;
   title: string;
   author?: string;
   notes?: string;
@@ -15,28 +16,29 @@ interface LibraryBook {
   status?: 'lendo' | 'lido';
   isFavorite?: boolean;
   userId?: number;
+  readingStatus?: string;
+  raw?: any;
 }
 
 @Component({
   selector: 'app-library',
-  templateUrl: './library.page.html',
-  styleUrls: ['./library.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    IonicModule,
-    RouterModule
-  ]
+  imports: [CommonModule, FormsModule, HttpClientModule, IonicModule, RouterModule],
+  templateUrl: './library.page.html',
+  styleUrls: ['./library.page.scss']
 })
-export class LibraryPage implements OnInit {
+export class LibraryPage {
   books: LibraryBook[] = [];
   reading: LibraryBook[] = [];
   read: LibraryBook[] = [];
 
+  savedBooks: LibraryBook[] = [];
   showAdd = false;
   isSubmitting = false;
+
+  updatingId: number | string | null = null;
+  deletingId: number | string | null = null;
+  savingId: number | string | null = null;
 
   userId = 1;
 
@@ -48,70 +50,77 @@ export class LibraryPage implements OnInit {
   };
 
   private apiUrl = environment.apiUrl?.replace(/\/$/, '') || '';
-  
 
   constructor(
     private http: HttpClient,
     private toastCtrl: ToastController,
+    private alertCtrl: AlertController,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.loadSavedLocal();
     this.loadBooks();
   }
 
-
-  goToInicio() {
-    this.router.navigate(['/inicio']);
+  ionViewWillEnter() {
+    this.loadSavedLocal();
+    this.loadBooks();
   }
 
-  goToExplore() {
-    this.router.navigate(['/explore']);
-  }
-
-  goToLibrary() {
-    this.router.navigate(['/library']);
-  }
-
-  goToSaved() {
-    this.router.navigate(['/savedbooks']);
-  }
-
-  goToProfile() {
-    this.router.navigate(['/profile']);
-  }
+  goToInicio() { this.router.navigate(['/inicio']); }
+  goToExplore() { this.router.navigate(['/explore']); }
+  goToLibrary() { this.router.navigate(['/library']); }
+  goToSaved() { this.router.navigate(['/savedbooks']); }
+  goToProfile() { this.router.navigate(['/profile']); }
 
   async presentToast(message: string, color: string = 'success') {
-    const toast = await this.toastCtrl.create({
-      message,
-      duration: 2000,
-      color
-    });
-    toast.present();
+    const t = await this.toastCtrl.create({ message, duration: 1400, color });
+    await t.present();
   }
 
-  toggleAdd() {
-    this.showAdd = !this.showAdd;
+  toggleAdd() { this.showAdd = !this.showAdd; }
+
+  loadSavedLocal() {
+    try {
+      const raw = localStorage.getItem('mySavedBooks');
+      this.savedBooks = raw ? JSON.parse(raw) : [];
+    } catch {
+      this.savedBooks = [];
+    }
+  }
+
+  isSaved(book: LibraryBook): boolean {
+    return this.savedBooks.some(b => String(b.id) === String(book.id));
   }
 
   loadBooks() {
-   
+    if (!this.apiUrl) {
+      try {
+        const raw = localStorage.getItem('myLibrary');
+        this.books = raw ? JSON.parse(raw) : [];
+        this.filterBooks();
+      } catch {
+        this.books = [];
+      }
+      return;
+    }
     const url = `${this.apiUrl}/books/user/${this.userId}`;
-
     this.http.get<any[]>(url).subscribe({
       next: (res) => {
-       
         this.books = (res || []).map((r) => ({
-          id: r.id,
+          id: r.id ?? r._id ?? Math.random().toString(36).slice(2,9),
           title: r.title,
           author: r.author,
           notes: r.notes,
-          thumbnail: r.thumbnail ?? null,
+          thumbnail: r.thumbnail ?? (r.cover_i ? `https://covers.openlibrary.org/b/id/${r.cover_i}-M.jpg` : null) ?? null,
           status:
             (r.status as 'lendo' | 'lido') ||
             (r.readingStatus === 'READ' ? 'lido' : r.readingStatus === 'READING' ? 'lendo' : 'lendo'),
           isFavorite: !!r.isFavorite,
-          userId: r.userId
+          userId: r.userId,
+          readingStatus: r.readingStatus,
+          raw: r
         }));
         this.filterBooks();
       },
@@ -124,29 +133,55 @@ export class LibraryPage implements OnInit {
     this.read = this.books.filter((b) => b.status === 'lido');
   }
 
-
   addBook() {
-    if (!this.form.title || !this.form.title.toString().trim()) return;
-
+    const title = (this.form.title || '').toString().trim();
+    if (!title) {
+      this.presentToast('Título é obrigatório', 'warning');
+      return;
+    }
     this.isSubmitting = true;
-
-    const payload = {
-      title: (this.form.title || '').toString().trim(),
+    const payload: any = {
+      title,
       author: (this.form.author || '').toString().trim(),
       notes: this.form.notes || '',
-  
       status: this.form.status || 'lendo',
       readingStatus: this.form.status === 'lido' ? 'READ' : 'READING',
       userId: this.userId
     };
-
-    const url = `${this.apiUrl}/books`; 
-
+    if (!this.apiUrl) {
+      try {
+        const key = 'myLibrary';
+        const raw = localStorage.getItem(key);
+        const current: LibraryBook[] = raw ? JSON.parse(raw) : [];
+        const saved: LibraryBook = {
+          id: Date.now(),
+          title: payload.title,
+          author: payload.author,
+          notes: payload.notes,
+          thumbnail: null,
+          status: payload.status,
+          userId: this.userId,
+          readingStatus: payload.readingStatus
+        };
+        current.unshift(saved);
+        localStorage.setItem(key, JSON.stringify(current));
+        this.books.unshift(saved);
+        this.filterBooks();
+        this.presentToast('Livro adicionado!');
+        this.form = { title: '', author: '', notes: '', status: 'lendo' };
+        this.showAdd = false;
+      } catch {
+        this.presentToast('Erro ao adicionar livro', 'danger');
+      } finally {
+        this.isSubmitting = false;
+      }
+      return;
+    }
+    const url = `${this.apiUrl}/books`;
     this.http.post<any>(url, payload).subscribe({
       next: (res) => {
-      
         const saved: LibraryBook = {
-          id: res.id,
+          id: res.id ?? res._id,
           title: res.title,
           author: res.author,
           notes: res.notes,
@@ -154,53 +189,156 @@ export class LibraryPage implements OnInit {
           status: res.status || (res.readingStatus === 'READ' ? 'lido' : 'lendo'),
           userId: res.userId
         };
-        this.books.push(saved);
+        this.books.unshift(saved);
         this.filterBooks();
         this.presentToast('Livro adicionado!');
         this.form = { title: '', author: '', notes: '', status: 'lendo' };
         this.showAdd = false;
       },
-      error: () => this.presentToast('Erro ao adicionar livro', 'danger'),
+      error: (err) => {
+        const msg = err?.error?.message || 'Erro ao adicionar livro';
+        this.presentToast(msg, 'danger');
+      },
       complete: () => (this.isSubmitting = false)
     });
   }
 
   updateStatus(book: LibraryBook, newStatus: 'lendo' | 'lido') {
+    if (this.updatingId === book.id) return;
+    this.updatingId = book.id ?? null;
     const updated = { ...book, status: newStatus, readingStatus: newStatus === 'lido' ? 'READ' : 'READING' };
-
+    if (!this.apiUrl) {
+      try {
+        const idx = this.books.findIndex((b) => b.id === book.id);
+        if (idx > -1) {
+          this.books[idx] = { ...this.books[idx], ...updated };
+          localStorage.setItem('myLibrary', JSON.stringify(this.books));
+          this.filterBooks();
+          this.presentToast('Status atualizado!');
+        }
+      } catch {
+        this.presentToast('Erro ao atualizar status', 'danger');
+      } finally {
+        this.updatingId = null;
+      }
+      return;
+    }
     const url = `${this.apiUrl}/books/${book.id}`;
-
-    this.http.put(url, updated).subscribe({
-      next: () => {
-        book.status = newStatus;
+    this.http.put<any>(url, updated).subscribe({
+      next: (res) => {
+        const idx = this.books.findIndex((b) => b.id === book.id);
+        if (idx > -1) {
+          this.books[idx] = {
+            ...this.books[idx],
+            status: res?.status || newStatus,
+            readingStatus: res?.readingStatus || (newStatus === 'lido' ? 'READ' : 'READING')
+          };
+        } else {
+          book.status = res?.status || newStatus;
+        }
         this.filterBooks();
         this.presentToast('Status atualizado!');
       },
-      error: () => this.presentToast('Erro ao atualizar status', 'danger')
+      error: () => this.presentToast('Erro ao atualizar status', 'danger'),
+      complete: () => { this.updatingId = null; }
     });
   }
 
-  removeBook(book: LibraryBook) {
-    const userId = this.userId;
+  markAsRead(book: LibraryBook) { this.updateStatus(book, 'lido'); }
+  markAsReading(book: LibraryBook) { this.updateStatus(book, 'lendo'); }
 
+  async removeBook(book: LibraryBook) {
+    const alert = await this.alertCtrl.create({
+      header: 'Remover livro',
+      message: `Deseja remover "${book.title}"?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Remover', role: 'destructive', handler: () => this._confirmRemove(book) }
+      ]
+    });
+    await alert.present();
+  }
 
+  private _confirmRemove(book: LibraryBook) {
+    if (this.deletingId === book.id) return;
+    this.deletingId = book.id ?? null;
+    if (!this.apiUrl) {
+      try {
+        this.books = this.books.filter((b) => b.id !== book.id);
+        localStorage.setItem('myLibrary', JSON.stringify(this.books));
+        this.filterBooks();
+        this.presentToast('Livro removido');
+      } catch {
+        this.presentToast('Erro ao remover livro', 'danger');
+      } finally {
+        this.deletingId = null;
+      }
+      return;
+    }
     const url = `${this.apiUrl}/books/${book.id}`;
-
-    this.http.delete(url).subscribe({
+    this.http.delete<any>(url).subscribe({
       next: () => {
         this.books = this.books.filter((b) => b.id !== book.id);
         this.filterBooks();
         this.presentToast('Livro removido');
       },
-      error: () => this.presentToast('Erro ao remover livro', 'danger')
+      error: () => this.presentToast('Erro ao remover livro', 'danger'),
+      complete: () => { this.deletingId = null; }
     });
   }
 
-  markAsRead(book: LibraryBook) {
-    this.updateStatus(book, 'lido');
-  }
-
-  markAsReading(book: LibraryBook) {
-    this.updateStatus(book, 'lendo');
+  saveToSaved(book: LibraryBook) {
+    if (this.savingId === book.id) return;
+    this.savingId = book.id ?? null;
+    const payload = {
+      id: book.id,
+      title: book.title,
+      author: book.author || '',
+      notes: book.notes || '',
+      thumbnail: book.thumbnail || null,
+      userId: this.userId
+    };
+    if (!this.apiUrl) {
+      try {
+        const key = 'mySavedBooks';
+        const raw = localStorage.getItem(key);
+        const current: LibraryBook[] = raw ? JSON.parse(raw) : [];
+        const exists = current.some(b => String(b.id) === String(book.id));
+        if (!exists) {
+          current.unshift(payload);
+          localStorage.setItem(key, JSON.stringify(current));
+          this.savedBooks = current;
+          this.presentToast('Livro salvo!');
+          setTimeout(() => {
+            this.savingId = null;
+            this.router.navigate(['/savedbooks']);
+          }, 360);
+          return;
+        } else {
+          this.presentToast('Livro já salvo', 'warning');
+          this.savingId = null;
+          return;
+        }
+      } catch {
+        this.presentToast('Erro ao salvar', 'danger');
+        this.savingId = null;
+        return;
+      }
+    }
+    const url = `${this.apiUrl}/savedbooks`;
+    this.http.post<any>(url, payload).subscribe({
+      next: () => {
+        this.loadSavedLocal();
+        this.presentToast('Livro salvo!');
+        setTimeout(() => {
+          this.savingId = null;
+          this.router.navigate(['/savedbooks']);
+        }, 360);
+      },
+      error: () => {
+        this.presentToast('Erro ao salvar', 'danger');
+        this.savingId = null;
+      }
+    });
   }
 }
