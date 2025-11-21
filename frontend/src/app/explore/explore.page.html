@@ -11,33 +11,20 @@
 
 <ion-content class="ion-padding explore-content">
 
-  <ion-tabs>
-    <ion-tab-bar slot="bottom" class="custom-tab-bar">
-      <ion-tab-button tab="inicio" routerLink="/inicio" routerLinkActive="tab-active">
-        <ion-icon name="home-outline"></ion-icon>
-      </ion-tab-button>
 
-      <ion-tab-button tab="explorar" routerLink="/explore" routerLinkActive="tab-active">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="biblioteca" routerLink="/library" routerLinkActive="tab-active">
-        <ion-icon name="library-outline"></ion-icon>
-      </ion-tab-button>
-
-      <ion-tab-button tab="salvos" routerLink="/savedbooks" routerLinkActive="tab-active">
-        <ion-icon name="bookmark-outline"></ion-icon>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
 
   <div class="search-wrap">
+    <!-- Searchbar principal -->
     <ion-searchbar
+      #searchBar
       placeholder="Pesquisar livros ou autores"
       [(ngModel)]="query"
       (ionInput)="onSearch($event)"
       debounce="300"
-      showCancelButton="focus">
+      showCancelButton="focus"
+      [style.display]="'block'"
+      [style.visibility]="'visible'"
+      [style.opacity]="1">
     </ion-searchbar>
   </div>
 
@@ -61,7 +48,7 @@
         <img [src]="b.thumbnail || 'assets/img/book-placeholder.png'" alt="{{ b.title }}" />
         <div class="book-info">
           <h3>{{ b.title }}</h3>
-          <p>{{ b.authors?.length ? (b.authors.join(', ')) : 'Autor desconhecido' }}</p>
+          <p>{{ b.authors && b.authors.length ? (b.authors.join(', ')) : 'Autor desconhecido' }}</p>
           <ion-button expand="block" size="small" (click)="addToLibrary(b)">Adicionar</ion-button>
         </div>
       </div>
@@ -69,3 +56,21 @@
   </div>
 
 </ion-content>
+
+<div class="bottom-tabs">
+  <ion-tab-button tab="inicio" href="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+  </ion-tab-button>
+
+  <ion-tab-button tab="explorar" (click)="goToExplore()">
+    <ion-icon name="search-outline"></ion-icon>
+  </ion-tab-button>
+
+  <ion-tab-button tab="biblioteca" (click)="goToLibrary()">
+    <ion-icon name="library-outline"></ion-icon>
+  </ion-tab-button>
+
+  <ion-tab-button tab="salvos" (click)="goToSaved()">
+    <ion-icon name="bookmark-outline"></ion-icon>
+  </ion-tab-button>
+</div>

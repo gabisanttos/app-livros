@@ -49,6 +49,107 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: #3b2b1b !important;
 }
 
+/* Estilos globais para bottom-tabs - garantem funcionamento no APK */
+.bottom-tabs {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  background: #8b6b3e !important;
+  color: #fff !important;
+  border-top: 1px solid #e6e6e6 !important;
+  display: flex !important;
+  justify-content: space-around !important;
+  z-index: 1000 !important;
+  height: 48px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bottom-tabs ion-tab-button {
+  flex: 1 !important;
+  text-align: center !important;
+  font-size: 12px !important;
+  height: 48px !important;
+  background: transparent !important;
+  color: #fff !important;
+  --background: transparent !important;
+  --color: #fff !important;
+  --color-selected: #fff !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.bottom-tabs ion-tab-button ion-icon {
+  color: #fff !important;
+  font-size: 22px !important;
+  fill: #fff !important;
+}
+
+/* Estilos específicos para Android/APK */
+.md .bottom-tabs {
+  background-color: #8b6b3e !important;
+}
+
+.md .bottom-tabs ion-tab-button {
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.md .bottom-tabs ion-tab-button ion-icon {
+  color: #ffffff !important;
+}
+
+/* Estilos específicos para iOS */
+.ios .bottom-tabs {
+  background-color: #8b6b3e !important;
+  backdrop-filter: none !important;
+}
+
+.ios .bottom-tabs ion-tab-button {
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.ios .bottom-tabs ion-tab-button ion-icon {
+  color: #ffffff !important;
+}
+
+/* Estilos globais para ion-searchbar - garante funcionamento no APK */
+ion-searchbar {
+  --background: #ffffff !important;
+  --color: #000000 !important;
+  --placeholder-color: #666666 !important;
+  --icon-color: #666666 !important;
+  --clear-button-color: #666666 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 44px !important;
+}
+
+/* Estilos específicos para o searchbar no Android */
+.md ion-searchbar {
+  --background: #ffffff !important;
+  --color: #000000 !important;
+}
+
+.md ion-searchbar .searchbar-input {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Estilos específicos para o searchbar no iOS */
+.ios ion-searchbar {
+  --background: #ffffff !important;
+  --color: #000000 !important;
+}
+
 
 
 

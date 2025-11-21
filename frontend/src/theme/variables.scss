@@ -1,2 +1,14 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+:root {
+  /* Variáveis customizadas para o tab bar */
+  --tab-bar-background: #8b6b3e;
+  --tab-bar-color: #ffffff;
+  --tab-bar-height: 48px;
+  
+  /* Sobrescrevendo variáveis do Ionic para tab buttons */
+  --ion-tab-bar-background: #8b6b3e;
+  --ion-tab-bar-color: #ffffff;
+  --ion-tab-bar-color-selected: #ffffff;
+}

@@ -1,10 +1,10 @@
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment.local';
-import { ToastController, IonicModule } from '@ionic/angular';
+import { ToastController, IonicModule, IonSearchbar } from '@ionic/angular';
 import { RouterModule } from '@angular/router'; 
 
 type BookResult = {
@@ -29,7 +29,9 @@ type BookResult = {
     RouterModule 
   ]
 })
-export class ExplorePage {
+export class ExplorePage implements OnInit, AfterViewInit {
+  @ViewChild('searchBar', { static: false }) searchBar!: IonSearchbar;
+  
   query: string = '';
   books: BookResult[] = [];
   loading = false;
@@ -45,6 +47,26 @@ export class ExplorePage {
     private router: Router 
   ) {
     console.log('ExplorePage inicializada — apiUrl =', this.apiUrl);
+  }
+
+  ngOnInit() {
+    console.log('ExplorePage ngOnInit');
+  }
+
+  ngAfterViewInit() {
+    console.log('ExplorePage ngAfterViewInit');
+    // Força a renderização do searchbar
+    if (this.searchBar) {
+      this.searchBar.getInputElement().then((input) => {
+        if (input) {
+          input.style.display = 'block';
+          input.style.visibility = 'visible';
+          console.log('Searchbar input configurado');
+        }
+      }).catch((error) => {
+        console.error('Erro ao configurar searchbar:', error);
+      });
+    }
   }
 
   goToInicio() {
@@ -65,6 +87,13 @@ export class ExplorePage {
 
   goToProfile() {
     this.router.navigate(['/profile']);
+  }
+
+  clearSearch() {
+    this.query = '';
+    this.books = [];
+    this.error = null;
+    console.log('Pesquisa limpa');
   }
 
   async showToast(message: string, color: string = 'success') {

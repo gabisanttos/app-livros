@@ -13,38 +13,41 @@
 
   <div *ngIf="savedBooks.length === 0" class="empty">Nenhum livro salvo ainda.</div>
 
-  <div class="row-slider" *ngIf="savedBooks.length > 0">
-    <div class="card" *ngFor="let b of savedBooks">
-      <div class="card-image" [style.background-image]="'url(' + (b.thumbnail || 'assets/img/book-placeholder.png') + ')'" (click)="openBook(b)">
-        <button class="card-remove" (click)="confirmRemove(b); $event.stopPropagation()">
-          <ion-icon name="trash-outline"></ion-icon>
-        </button>
-        <div class="card-overlay">
-          <div class="card-title">{{ b.title }}</div>
-          <div class="card-author">{{ b.author || 'Autor desconhecido' }}</div>
-        </div>
+  <div *ngIf="savedBooks.length > 0" class="book-grid">
+    <div *ngFor="let b of savedBooks" class="book-card" (click)="openBook(b)">
+      <ion-icon 
+        name="trash-outline" 
+        class="favorite-icon" 
+        (click)="confirmRemove(b); $event.stopPropagation()">
+      </ion-icon>
+      
+      <img 
+        class="thumb"
+        [src]="b.thumbnail || 'assets/img/book-placeholder.png'"
+      />
+      
+      <div class="book-info">
+        <h2 class="title">{{ b.title }}</h2>
+        <p class="author">{{ b.author || 'Autor desconhecido' }}</p>
       </div>
     </div>
   </div>
 </ion-content>
 
-<ion-footer translucent>
-  <ion-toolbar class="custom-tab-bar">
-    <ion-grid>
-      <ion-row class="tab-row" align-items-center>
-        <ion-col class="tab-col" (click)="goToInicio()">
-          <ion-button fill="clear"><ion-icon name="home-outline"></ion-icon></ion-button>
-        </ion-col>
-        <ion-col class="tab-col" (click)="goToExplore()">
-          <ion-button fill="clear"><ion-icon name="search-outline"></ion-icon></ion-button>
-        </ion-col>
-        <ion-col class="tab-col" (click)="goToLibrary()">
-          <ion-button fill="clear"><ion-icon name="library-outline"></ion-icon></ion-button>
-        </ion-col>
-        <ion-col class="tab-col" (click)="goToSaved()">
-          <ion-button fill="clear"><ion-icon name="bookmark-outline"></ion-icon></ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-toolbar>
-</ion-footer>
+<div class="bottom-tabs">
+  <ion-tab-button tab="inicio" href="/inicio">
+    <ion-icon name="home-outline"></ion-icon>
+  </ion-tab-button>
+
+  <ion-tab-button tab="explorar" (click)="goToExplore()">
+    <ion-icon name="search-outline"></ion-icon>
+  </ion-tab-button>
+
+  <ion-tab-button tab="biblioteca" (click)="goToLibrary()">
+    <ion-icon name="library-outline"></ion-icon>
+  </ion-tab-button>
+
+  <ion-tab-button tab="salvos" (click)="goToSaved()">
+    <ion-icon name="bookmark-outline"></ion-icon>
+  </ion-tab-button>
+</div>
