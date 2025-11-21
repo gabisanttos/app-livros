@@ -26,10 +26,18 @@
 <div *ngIf="recommendations.length > 0" class="book-grid">
   <div *ngFor="let book of recommendations" class="book-card">
 
-<img 
-  class="thumb"
-  [src]="book.coverUrl || generateThumbnail(book.title)"
-/>
+    <ion-icon 
+      [name]="book.isFavorite ? 'heart' : 'heart-outline'"
+      class="favorite-icon"
+      [class.favorited]="book.isFavorite"
+      title="Favoritar" 
+      (click)="toggleFavorite(book); $event.stopPropagation()">
+    </ion-icon>
+
+    <img 
+      class="thumb"
+      [src]="book.coverUrl || generateThumbnail(book.title)"
+    />
 
     <div class="book-info">
       <h2 class="title">{{ book.title }}</h2>

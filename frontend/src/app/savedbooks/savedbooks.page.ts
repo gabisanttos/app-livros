@@ -25,6 +25,8 @@ export interface SavedBook {
 export class SavedbooksPage implements OnInit {
   savedBooks: SavedBook[] = [];
   deletingId: number | string | null = null;
+  addingId: string | null = null;
+  removingId: string | null = null;
   private apiUrl = environment.apiUrl?.replace(/\/$/, '') || '';
 
   constructor(
@@ -77,49 +79,64 @@ export class SavedbooksPage implements OnInit {
   goToSaved() { this.router.navigate(['/savedbooks']); }
   goToProfile() { this.router.navigate(['/profile']); }
 
-  async confirmRemove(book: SavedBook) {
-    const alert = await this.alertCtrl.create({
-      header: 'Remover livro',
-      message: `Remover "${book.title}"?`,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { text: 'Remover', role: 'destructive', handler: () => this.removeBook(book) }
-      ]
-    });
-    await alert.present();
+  toggleFavorite(book: any) {
+    // Alterna o status de favorito do livro
+    book.isFavorite = !book.isFavorite;
+    
+    // Aqui você pode adicionar a lógica para salvar no backend/storage
+    if (book.isFavorite) {
+      console.log(`Livro "${book.title}" adicionado aos favoritos`);
+      this.presentToast('Adicionado aos favoritos! ❤️');
+    } else {
+      console.log(`Livro "${book.title}" removido dos favoritos`);
+      this.presentToast('Removido dos favoritos');
+    }
   }
 
-  removeBook(book: SavedBook) {
-    if (this.deletingId === book.id) return;
-    this.deletingId = book.id ?? null;
-    if (!this.apiUrl) {
-      try {
-        this.savedBooks = this.savedBooks.filter(b => b.id !== book.id);
-        localStorage.setItem('mySavedBooks', JSON.stringify(this.savedBooks));
-        this.presentToast('Livro removido');
-      } catch {
-        this.presentToast('Erro ao remover', 'danger');
-      } finally {
-        this.deletingId = null;
+  async openReadingStatusModal(book: any) {
+    this.addingId = book.id;
+    
+    try {
+      // Simula adição à biblioteca
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      console.log('Adicionando livro à biblioteca:', book.title);
+      this.presentToast(`"${book.title}" adicionado à biblioteca!`);
+      
+      // Aqui você implementaria a lógica real de adicionar à biblioteca
+      
+    } catch (error) {
+      this.presentToast('Erro ao adicionar livro à biblioteca');
+    } finally {
+      this.addingId = null;
+    }
+  }
+
+  async confirmRemove(book: any) {
+    this.removingId = book.id;
+    
+    try {
+      // Simula remoção
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Remove o livro da lista
+      const index = this.savedBooks.findIndex(b => b.id === book.id);
+      if (index > -1) {
+        this.savedBooks.splice(index, 1);
+        this.presentToast(`"${book.title}" removido dos salvos`);
       }
-      return;
+      
+    } catch (error) {
+      this.presentToast('Erro ao remover livro');
+    } finally {
+      this.removingId = null;
     }
-    this.http.delete(`${this.apiUrl}/savedbooks/${book.id}`).subscribe({
-      next: () => {
-        this.savedBooks = this.savedBooks.filter(b => b.id !== book.id);
-        this.presentToast('Livro removido');
-      },
-      error: () => this.presentToast('Erro ao remover', 'danger'),
-      complete: () => this.deletingId = null
-    });
   }
 
-  openBook(book: SavedBook) {
-    if (book.id) {
-      this.router.navigate(['/book', book.id]);
-      return;
-    }
-    this.presentToast('Abrindo detalhes não disponível', 'warning');
+  generateThumbnail(title: string): string {
+    // Gera uma URL de placeholder baseada no título
+    const encodedTitle = encodeURIComponent(title.substring(0, 20));
+    return `https://via.placeholder.com/160x240/8b6b3e/ffffff?text=${encodedTitle}`;
   }
 
   async presentToast(message: string, color: string = 'success') {

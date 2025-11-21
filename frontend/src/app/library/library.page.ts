@@ -204,45 +204,51 @@ export class LibraryPage {
   }
 
   updateStatus(book: LibraryBook, newStatus: 'lendo' | 'lido') {
-    if (this.updatingId === book.id) return;
-    this.updatingId = book.id ?? null;
-    const updated = { ...book, status: newStatus, readingStatus: newStatus === 'lido' ? 'READ' : 'READING' };
-    if (!this.apiUrl) {
-      try {
-        const idx = this.books.findIndex((b) => b.id === book.id);
-        if (idx > -1) {
-          this.books[idx] = { ...this.books[idx], ...updated };
-          localStorage.setItem('myLibrary', JSON.stringify(this.books));
-          this.filterBooks();
-          this.presentToast('Status atualizado!');
-        }
-      } catch {
-        this.presentToast('Erro ao atualizar status', 'danger');
-      } finally {
-        this.updatingId = null;
-      }
-      return;
-    }
-    const url = `${this.apiUrl}/books/${book.id}`;
-    this.http.put<any>(url, updated).subscribe({
-      next: (res) => {
-        const idx = this.books.findIndex((b) => b.id === book.id);
-        if (idx > -1) {
-          this.books[idx] = {
-            ...this.books[idx],
-            status: res?.status || newStatus,
-            readingStatus: res?.readingStatus || (newStatus === 'lido' ? 'READ' : 'READING')
-          };
-        } else {
-          book.status = res?.status || newStatus;
-        }
+  if (this.updatingId === book.id) return;
+  this.updatingId = book.id ?? null;
+
+  const payload = {
+    bookId: book.id,
+    userId: this.userId,
+    status: newStatus === 'lido' ? 'READ' : 'READING'
+  };
+
+  if (!this.apiUrl) {
+    try {
+      const idx = this.books.findIndex((b) => b.id === book.id);
+      if (idx > -1) {
+        this.books[idx] = { ...this.books[idx], status: newStatus, readingStatus: payload.status };
+        localStorage.setItem('myLibrary', JSON.stringify(this.books));
         this.filterBooks();
         this.presentToast('Status atualizado!');
-      },
-      error: () => this.presentToast('Erro ao atualizar status', 'danger'),
-      complete: () => { this.updatingId = null; }
-    });
+      }
+    } catch {
+      this.presentToast('Erro ao atualizar status', 'danger');
+    } finally {
+      this.updatingId = null;
+    }
+    return;
   }
+
+  const url = `${this.apiUrl}/books/status`; // ✅ rota PATCH correta
+  this.http.patch<any>(url, payload).subscribe({
+    next: (res) => {
+      const idx = this.books.findIndex((b) => b.id === book.id);
+      if (idx > -1) {
+        this.books[idx] = {
+          ...this.books[idx],
+          status: newStatus,
+          readingStatus: payload.status
+        };
+      }
+      this.filterBooks();
+      this.presentToast('Status atualizado!');
+    },
+    error: () => this.presentToast('Erro ao atualizar status', 'danger'),
+    complete: () => { this.updatingId = null; }
+  });
+}
+
 
   markAsRead(book: LibraryBook) { this.updateStatus(book, 'lido'); }
   markAsReading(book: LibraryBook) { this.updateStatus(book, 'lendo'); }

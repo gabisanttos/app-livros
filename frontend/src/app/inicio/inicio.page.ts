@@ -158,65 +158,46 @@ export class InicioPage implements OnInit {
       });
   }
 
- async toggleFavorite(book: any) {
-  const token = localStorage.getItem('token');
-  const userId = Number(localStorage.getItem('userId'));
-
-  await this.wakeServer();
-  await new Promise(res => setTimeout(res, 2000));
-
-  if (!token || !userId) return;
-
-  if (!book.id) {
-    console.error("Tentou favoritar um livro sem ID. Adicione à biblioteca primeiro.");
-    return;
+  toggleFavorite(book: any) {
+    // Alterna o status de favorito do livro
+    book.isFavorite = !book.isFavorite;
+    
+    // Aqui você pode adicionar a lógica para salvar no backend/storage
+    if (book.isFavorite) {
+      console.log(`Livro "${book.title}" adicionado aos favoritos`);
+      // Exemplo: this.favoritesService.addToFavorites(book);
+    } else {
+      console.log(`Livro "${book.title}" removido dos favoritos`);
+      // Exemplo: this.favoritesService.removeFromFavorites(book);
+    }
+    
+    // Opcional: mostrar toast de confirmação
+    // this.presentToast(book.isFavorite ? 'Adicionado aos favoritos!' : 'Removido dos favoritos!');
   }
 
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  });
+  generateThumbnail(title: string): string {
+    const firstLetter = title.charAt(0).toUpperCase();
 
-  const payload = {
-    bookId: book.id,
-    userId: userId
-  };
+    // cor baseada no hash
+    const colors = ["#6C63FF", "#FF6584", "#3DB2FF", "#00C896", "#FFB830"];
+    const color = colors[title.length % colors.length];
 
-  this.http.patch(`${this.apiUrl}/books/favorite`, payload, { headers })
-    .subscribe({
-      next: () => {
-        console.log("Favorito atualizado ✔");
-        book.favorited = !book.favorited;
-      },
-      error: (err) => {
-        console.error("Erro ao favoritar:", err);
-      }
-    });
-}
+    const canvas = document.createElement('canvas');
+    canvas.width = 300;
+    canvas.height = 450;
 
-generateThumbnail(title: string): string {
-  const firstLetter = title.charAt(0).toUpperCase();
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // cor baseada no hash
-  const colors = ["#6C63FF", "#FF6584", "#3DB2FF", "#00C896", "#FFB830"];
-  const color = colors[title.length % colors.length];
+    ctx.font = "bold 150px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(firstLetter, canvas.width / 2, canvas.height / 2);
 
-  const canvas = document.createElement('canvas');
-  canvas.width = 300;
-  canvas.height = 450;
-
-  const ctx = canvas.getContext('2d')!;
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.font = "bold 150px Arial";
-  ctx.fillStyle = "#fff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(firstLetter, canvas.width / 2, canvas.height / 2);
-
-  return canvas.toDataURL("image/png");
-}
+    return canvas.toDataURL("image/png");
+  }
 
 
 

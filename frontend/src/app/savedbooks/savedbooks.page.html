@@ -9,29 +9,84 @@
 </ion-header>
 
 <ion-content class="savedbooks-content ion-padding" style="padding-bottom:90px;">
-  <h2 class="section-title">Seus Livros Salvos</h2>
+  
+  <ion-card>
+    <ion-card-content>
+      <h2>Livros Salvos 📚</h2>
+      <p>Aqui estão os livros que você salvou para ler mais tarde.</p>
+    </ion-card-content>
+  </ion-card>
 
-  <div *ngIf="savedBooks.length === 0" class="empty">Nenhum livro salvo ainda.</div>
+  <h3>Seus livros salvos</h3>
 
   <div *ngIf="savedBooks.length > 0" class="book-grid">
-    <div *ngFor="let b of savedBooks" class="book-card" (click)="openBook(b)">
+    <div *ngFor="let b of savedBooks" class="book-card">
+
       <ion-icon 
-        name="trash-outline" 
-        class="favorite-icon" 
-        (click)="confirmRemove(b); $event.stopPropagation()">
+        [name]="$any(b).isFavorite ? 'heart' : 'heart-outline'"
+        class="favorite-icon"
+        [class.favorited]="$any(b).isFavorite"
+        title="Favoritar" 
+        (click)="toggleFavorite(b); $event.stopPropagation()">
       </ion-icon>
       
       <img 
         class="thumb"
-        [src]="b.thumbnail || 'assets/img/book-placeholder.png'"
+        [src]="b.thumbnail || $any(b).coverUrl || generateThumbnail(b.title)"
       />
       
       <div class="book-info">
         <h2 class="title">{{ b.title }}</h2>
         <p class="author">{{ b.author || 'Autor desconhecido' }}</p>
+        <p class="desc">{{ $any(b).description || $any(b).info || 'Sem descrição disponível' }}</p>
       </div>
+
+      <div class="card-actions">
+        <ion-button 
+          expand="block" 
+          size="small" 
+          class="add-btn" 
+          (click)="openReadingStatusModal(b)"
+          [disabled]="addingId === b.id">
+          <ng-container *ngIf="addingId === b.id; else addLabel">
+            <ion-spinner name="dots" style="height:16px; width:16px;"></ion-spinner>
+          </ng-container>
+          <ng-template #addLabel>Adicionar à biblioteca</ng-template>
+        </ion-button>
+        
+        <ion-button 
+          expand="block" 
+          size="small" 
+          fill="clear" 
+          class="remove-btn" 
+          (click)="confirmRemove(b)"
+          [disabled]="removingId === b.id">
+          <ng-container *ngIf="removingId === b.id; else removeLabel">
+            <ion-spinner name="dots" style="height:16px; width:16px;"></ion-spinner>
+          </ng-container>
+          <ng-template #removeLabel>
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Remover dos salvos
+          </ng-template>
+        </ion-button>
+      </div>
+
     </div>
   </div>
+
+  <!-- Se não houver livros salvos -->
+  <ion-card class="ion-text-center" *ngIf="savedBooks.length === 0" button="true">
+    <ion-card-content>
+      <ion-icon name="bookmark-outline" style="font-size: 64px; color: #8b6b3e; margin-bottom: 16px;"></ion-icon>
+      <p><strong>Nenhum livro salvo ainda</strong></p>
+      <p>Explore nossa biblioteca e salve livros interessantes para ler mais tarde!</p>
+      <ion-button fill="solid" class="inicio-btn" (click)="goToExplore()">
+        <ion-icon name="search-outline" slot="start"></ion-icon>
+        Explorar livros
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
 
 <div class="bottom-tabs">

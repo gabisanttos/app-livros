@@ -135,7 +135,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     this.books = [];
 
     // ATUALIZADO: Inclui userId para receber informação de favoritos
-    const searchUrl = `${this.apiUrl}/v1/api/books/search?q=${encodeURIComponent(q)}&userId=${this.userId}`;
+    const searchUrl = `${this.apiUrl}/books/search?q=${encodeURIComponent(q)}&userId=${this.userId}`;
     
     this.http.get(searchUrl).subscribe({
       next: (res: any) => {
@@ -192,7 +192,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
     console.log('Adicionando livro à biblioteca:', payload);
 
-    this.http.post(`${this.apiUrl}/v1/api/books`, payload).subscribe({
+    this.http.post(`${this.apiUrl}/books`, payload).subscribe({
       next: (response) => {
         console.log('Livro adicionado:', response);
         this.showToast('📚 Livro adicionado à sua biblioteca!');
@@ -217,7 +217,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
         publishedDate: book.publishedDate
       };
 
-      this.http.post(`${this.apiUrl}/v1/api/favorites/${this.userId}`, payload).subscribe({
+      this.http.post(`${this.apiUrl}/favorites/${this.userId}`, payload).subscribe({
         next: () => {
           book.isFavorite = true;
           this.showToast('❤️ Livro adicionado aos favoritos!');
@@ -231,7 +231,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       // Remover dos favoritos
       const payload = { googleBookId: book.id };
       
-      this.http.delete(`${this.apiUrl}/v1/api/favorites/${this.userId}/by-google-id`, { 
+      this.http.delete(`${this.apiUrl}favorites/${this.userId}/by-google-id`, { 
         body: payload 
       }).subscribe({
         next: () => {

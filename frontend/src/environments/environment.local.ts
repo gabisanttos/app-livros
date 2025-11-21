@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://api-capitu.onrender.com/v1/api'
+  apiUrl: 'http://localhost:3000/v1/api'
 };
 
 /*
