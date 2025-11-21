@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">root</string>
-    <string name="title_activity_main">root</string>
-    <string name="package_name">com.root.app</string>
-    <string name="custom_url_scheme">com.root.app</string>
+    <string name="app_name">Capitu</string>
+    <string name="title_activity_main">Capitu</string>
+    <string name="package_name">com.capitu.app</string>
+    <string name="custom_url_scheme">com.capitu.app</string>
 </resources>

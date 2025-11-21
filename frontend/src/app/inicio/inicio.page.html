@@ -25,9 +25,11 @@
 
 <div *ngIf="recommendations.length > 0" class="book-grid">
   <div *ngFor="let book of recommendations" class="book-card">
-    
-<img class="thumb" [src]="book.coverUrl || 'assets/no-cover.png'" />
 
+<img 
+  class="thumb"
+  [src]="book.coverUrl || generateThumbnail(book.title)"
+/>
 
     <div class="book-info">
       <h2 class="title">{{ book.title }}</h2>
@@ -35,12 +37,13 @@
       <p class="desc">{{ book.info }}</p>
     </div>
 
-    <ion-button expand="block" size="small" class="add-btn">
+    <ion-button expand="block" size="small" class="add-btn" (click)="openReadingStatusModal(book)">
       Adicionar
     </ion-button>
 
   </div>
 </div>
+
 
 
 <!-- Se não houver recomendações -->
